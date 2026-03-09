@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Blog | Fitness Square</title>
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/blog.css">
+</head>
+
+<body class="blog-page">
+
+    <!-- Header (Reused from Dashboard) -->
+    <header id="header">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <img src="logo.png" alt="Fitness Square Logo" class="logo-img">
+                FITNESS <span>SQUARE</span>
+            </a>
+            <nav class="nav-links">
+                <a href="#" id="dashboardLink">Dashboard</a>
+                <a href="blog.html" class="active">Community</a>
+                <a href="#" id="logoutBtn" class="login-link">LOGOUT</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="blog-container">
+        <div class="blog-header">
+            <h1 class="blog-title">Community <span>Feed</span></h1>
+            <div style="display: flex; gap: 15px;">
+                <a href="moderator-dashboard.html" id="moderatorBtn" class="btn-create-post"
+                    style="background: white; color: black; display: none;">Moderation</a>
+            </div>
+        </div>
+
+        <!-- Share Your Story Action Card -->
+        <div class="blog-card share-story-card"
+            style="margin-bottom: 30px; display: flex; flex-direction: row; align-items: center; padding: 25px; background: linear-gradient(135deg, rgba(255,204,0,0.1) 0%, rgba(204,170,0,0.05) 100%); border: 1px solid var(--blog-primary); cursor: pointer;"
+            onclick="window.location.href='create-post.html'">
+            <div
+                style="background: var(--blog-primary); color: var(--dark); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin-right: 20px; flex-shrink: 0; box-shadow: 0 4px 15px rgba(255, 204, 0, 0.4);">
+                <i class="fas fa-pen-nib"></i>
+            </div>
+            <div>
+                <h3 style="margin-bottom: 8px; color: var(--text-color); font-size: 1.4rem;">Share Your <span
+                        style="color: var(--blog-primary);">Story</span></h3>
+                <p style="color: var(--text-muted); font-size: 1rem; margin: 0;">Inspire the community! Share your
+                    fitness journey, tips, or recent milestones.</p>
+            </div>
+            <div style="margin-left: auto; color: var(--blog-primary); font-size: 1.5rem; transition: transform 0.3s;"
+                id="shareStoryArrow">
+                <i class="fas fa-arrow-right"></i>
+            </div>
+        </div>
+        <style>
+            .share-story-card:hover #shareStoryArrow {
+                transform: translateX(5px);
+            }
+
+            .share-story-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 25px rgba(255, 204, 0, 0.15);
+            }
+        </style>
+
+        <!-- Tab Navigation -->
+        <div class="blog-tabs"
+            style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                <button class="blog-tab active" id="tabCommunity">Community Feed</button>
+                <button class="blog-tab" id="tabMyPosts">My Posts</button>
+
+                <!-- Tag Search Filter -->
+                <div style="position: relative;">
+                    <i class="fas fa-search"
+                        style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #888;"></i>
+                    <input type="text" id="tagSearchInput" placeholder="Filter by tags..."
+                        style="padding: 10px 15px 10px 40px; border-radius: 20px; border: 2px solid var(--border-color); background: var(--nav-bg); color: var(--text-color); font-family: 'Montserrat', sans-serif; outline: none; width: 180px; transition: all 0.3s ease;">
+                </div>
+            </div>
+            <div style="margin-left: auto;">
+                <select id="activityFilter"
+                    style="padding: 10px 15px; border-radius: 20px; border: 2px solid var(--primary); background: rgba(0, 0, 0, 0.4); color: var(--primary); font-family: 'Montserrat', sans-serif; font-weight: 600; cursor: pointer; outline: none; transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(255, 204, 0, 0.1);">
+                    <option value="none" style="background: #222; color: #fff;">Activity Filter</option>
+                    <option value="saved" style="background: #222; color: #fff;">Saved Posts</option>
+                    <option value="archived" id="optArchived" style="background: #222; color: #fff;">
+                        Archived Posts</option>
+                    <option value="reported" style="background: #222; color: #fff;">Report History</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Blog Grid -->
+        <div id="blogGrid" class="blog-grid">
+            <!-- Posts injected by JS -->
+            <div class="loading-spinner">Loading posts...</div>
+        </div>
+
+        <!-- Report Modal -->
+        <div id="reportModal" class="modal"
+            style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.8); align-items: center; justify-content: center; backdrop-filter: blur(5px);">
+            <div class="modal-content"
+                style="background-color: white; margin: auto; padding: 40px; border-radius: 20px; width: 90%; max-width: 450px; text-align: center; border: 1px solid #ccc; box-shadow: 0 10px 40px rgba(0,0,0,0.5);">
+                <i class="fas fa-exclamation-triangle"
+                    style="font-size: 3rem; color: #ffa502; margin-bottom: 20px;"></i>
+                <h3 style="margin-bottom: 10px; font-size: 1.5rem; color: black;">Report Content</h3>
+                <p style="color: #444; margin-bottom: 30px; font-size: 0.95rem;">Please help us understand
+                    why you are reporting this content.</p>
+
+                <form id="reportForm" onsubmit="handleReportSubmit(event)">
+                    <input type="hidden" id="reportTargetId">
+                    <input type="hidden" id="reportTargetType">
+                    <div style="text-align: left; margin-bottom: 30px;">
+                        <label
+                            style="display: block; margin-bottom: 15px; color: black; font-weight: 600; font-size: 0.95rem;">Select
+                            a reason:</label>
+                        <select id="reportReason" class="form-control"
+                            style="width: 100%; padding: 15px; background: #f9f9f9; border: 2px solid #ccc; border-radius: 12px; color: black; font-family: 'Montserrat', sans-serif; cursor: pointer; transition: all 0.3s ease; outline: none;">
+                            <option value="Spam" style="color: black;">Spam or unwanted commercial
+                                content</option>
+                            <option value="Abusive" style="color: black;">Abusive or hateful content
+                            </option>
+                            <option value="Misinformation" style="color: black;">Misinformation or
+                                fake news</option>
+                            <option value="Irrelevant" style="color: black;">Irrelevant or completely
+                                off-topic</option>
+                            <option value="Wrong" style="color: black;">Wrong content or category</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; gap: 15px; justify-content: space-between;">
+                        <button type="button" onclick="closeReportModal()"
+                            style="flex: 1; padding: 12px 20px; border-radius: 12px; background: transparent; border: 2px solid #ccc; color: black; cursor: pointer; font-family: 'Montserrat', sans-serif; font-weight: 600; transition: all 0.3s ease;"
+                            onmouseover="this.style.background='#eee'"
+                            onmouseout="this.style.background='transparent'">Cancel</button>
+                        <button type="submit"
+                            style="flex: 1; padding: 12px 20px; border-radius: 12px; background: var(--primary); border: none; color: black; font-weight: 700; cursor: pointer; font-family: 'Montserrat', sans-serif; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(255, 204, 0, 0.3);"
+                            onmouseover="this.style.transform='translateY(-2px)'"
+                            onmouseout="this.style.transform='translateY(0)'">Submit Report</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/blog.js?v=2"></script>
+    <script>
+        // Check auth on load
+        const token = localStorage.getItem('token');
+        if (!token) window.location.href = 'login.html';
+
+        // Check role for moderation button
+        const userStr = localStorage.getItem('user');
+        let userRole = null;
+        if (userStr) {
+            try {
+                const userObj = JSON.parse(userStr);
+                userRole = userObj.role;
+
+                // Update dashboard link based on role
+                const dbLink = document.getElementById('dashboardLink');
+                if (dbLink) {
+                    if (userRole === 'admin') dbLink.href = 'admin-dashboard.html';
+                    else if (userRole === 'trainer') dbLink.href = 'trainer-dashboard.html';
+                    else dbLink.href = 'dashboard.html';
+                }
+            } catch (e) {
+                console.error("Error parsing user from localStorage", e);
+            }
+        }
+
+        if (userRole === 'admin' || userRole === 'trainer') {
+            document.getElementById('moderatorBtn').style.display = 'inline-block';
+        }
+
+        // Logout logic
+        document.getElementById('logoutBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.removeItem('token');
+            localStorage.removeItem('role');
+            window.location.href = 'login.html';
+        });
+    </script>
+</body>
+
+</html>

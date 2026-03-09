@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Profile | Fitness Square</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="profile-page">
+
+    <!-- Header -->
+    <header id="header">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <img src="logo.png" alt="Fitness Square Logo" class="logo-img">
+                FITNESS <span>SQUARE</span>
+            </a>
+            <nav class="nav-links">
+                <div class="nav-item has-dropdown">
+                    <a href="#" class="nav-link">Tracker</a>
+                    <i class="fas fa-chevron-down"></i>
+                    <div class="dropdown-menu">
+                        <a href="workout-tracker.html" class="dropdown-item"><i class="fas fa-dumbbell"></i> Workout</a>
+                        <a href="sleep-tracker.html" class="dropdown-item"><i class="fas fa-moon"></i> Sleep</a>
+                        <a href="water-tracker.html" class="dropdown-item"><i class="fas fa-tint"></i> Water</a>
+                        <a href="meal-tracker.html" class="dropdown-item"><i class="fas fa-utensils"></i> Meal</a>
+                    </div>
+                </div>
+                <div class="nav-item has-dropdown">
+                    <a href="#" class="nav-link">Calculator</a>
+                    <i class="fas fa-chevron-down"></i>
+                    <div class="dropdown-menu dropdown-menu-wide">
+                        <a href="bmi-calculator.html" class="dropdown-item"><i class="fas fa-weight"></i> BMI
+                            Calculator</a>
+                        <a href="calorie-calculator.html" class="dropdown-item"><i class="fas fa-fire"></i> Calorie
+                            Calculator</a>
+                        <a href="bodyfat-calculator.html" class="dropdown-item"><i class="fas fa-percentage"></i> Body
+                            Fat Calculator</a>
+                        <a href="deficit-calculator.html" class="dropdown-item"><i class="fas fa-chart-line"></i>
+                            Calorie Deficit</a>
+                        <a href="hydration-calculator.html" class="dropdown-item"><i class="fas fa-heartbeat"></i>
+                            Hydration Calculator</a>
+                    </div>
+                </div>
+                <div class="nav-separator"></div>
+                <a href="#" id="logoutBtn" class="login-link">
+                    <i class="fas fa-sign-out-alt"></i>
+                    LOGOUT
+                </a>
+                <a href="dashboard.html" class="btn btn-primary">Dashboard</a>
+                <a href="profile-member.html" class="profile-link active"><i class="fas fa-user-circle"></i></a>
+            </nav>
+            <div class="hamburger">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Profile Content -->
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <h1>Edit Member Profile</h1>
+            <p>Keep your health metrics and goals updated.</p>
+        </div>
+
+        <div class="profile-card-container">
+            <div class="login-card profile-edit-card">
+                <form id="profileForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="fullname">Full Name</label>
+                            <input type="text" id="fullname" readonly>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" readonly>
+                            <small style="color:#888;">Email cannot be changed</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="age">Age</label>
+                            <input type="number" id="age" placeholder="Enter your age">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="gender">Gender</label>
+                            <select id="gender">
+                                <option value="" disabled selected>Select gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="weight">Weight (kg)</label>
+                            <input type="number" step="0.1" id="weight" placeholder="Weight in kg">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="height">Height (cm)</label>
+                            <input type="number" id="height" placeholder="Height in cm">
+                        </div>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="fitnessGoals">Fitness Goals</label>
+                        <textarea id="fitnessGoals"
+                            placeholder="Describe your goals (e.g., Weight Loss, Muscle Gain, Injury Recovery)"></textarea>
+                    </div>
+
+                    <div class="form-group full-width" id="medicalReportsSection">
+                        <label for="medicalReports">Medical Reports / Conditions (Keywords)</label>
+                        <input type="text" id="medicalReports"
+                            placeholder="e.g. Asthma, Knee Pain, Diabetes (comma separated)">
+
+                        <div
+                            style="margin-top: 15px; padding: 15px; border: 1px dashed #444; border-radius: 8px; background: rgba(255,255,255,0.02);">
+                            <label for="medicalPdf" style="margin-bottom: 10px; display: block;">Upload Medical Report
+                                (PDF)</label>
+                            <input type="file" id="medicalPdf" accept=".pdf"
+                                style="border: none; padding: 0; background: transparent;">
+                            <div id="pdfStatus" style="margin-top: 10px; font-size: 0.85rem; color: var(--primary);">
+                            </div>
+                            <div id="currentPdf" style="margin-top: 10px; font-size: 0.85rem; display: none;">
+                                <i class="fas fa-file-pdf" style="color: #ff4444; margin-right: 5px;"></i>
+                                <a id="pdfLink" href="#" target="_blank"
+                                    style="color: var(--primary); text-decoration: underline;">View Current Report</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-grid" id="targetFields">
+                        <div class="form-group">
+                            <label for="targetCalories">Target Cals Burned/Day</label>
+                            <input type="number" id="targetCalories" placeholder="2000">
+                        </div>
+                        <div class="form-group">
+                            <label for="targetWater">Target Water (Liters)</label>
+                            <input type="number" step="0.1" id="targetWater" placeholder="3.5">
+                        </div>
+                        <div class="form-group">
+                            <label for="targetSleep">Target Sleep (Hours)</label>
+                            <input type="number" step="0.5" id="targetSleep" placeholder="8">
+                        </div>
+                    </div>
+
+                    <div id="profileMessage" class="form-message"></div>
+
+                    <button type="submit" class="btn btn-primary btn-block">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js?v=2"></script>
+</body>
+
+</html>

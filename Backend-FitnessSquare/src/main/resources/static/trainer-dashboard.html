@@ -1,0 +1,2938 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trainer Dashboard | Fitness Square</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="dashboard-page trainer-dashboard">
+    <header id="header">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <img src="logo.png" alt="Fitness Square Logo" class="logo-img">
+                FITNESS <span>SQUARE</span>
+            </a>
+            <nav class="nav-links">
+                <a href="#" class="nav-link active" onclick="showTab('clients', event)">Clients & Progress</a>
+                <a href="#" class="nav-link" onclick="showTab('goalPlan', event)">Goal Plan</a>
+                <a href="#" class="nav-link" onclick="showTab('sessionSchedule', event)">Session Schedule</a>
+                <a href="blog.html" class="nav-link">Community</a>
+                <div class="nav-separator"></div>
+                <a href="#" id="logoutBtn" class="login-link"><i class="fas fa-sign-out-alt"></i> LOGOUT</a>
+                <a href="trainer-dashboard.html" class="btn btn-primary">Dashboard</a>
+
+            </nav>
+            <div class="hamburger"><i class="fas fa-bars"></i></div>
+        </div>
+    </header>
+
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <h1 id="welcomeMessage">Trainer Dashboard</h1>
+            <p>Your daily overview and client management.</p>
+        </div>
+
+        <!-- Dashboard Stats Row -->
+        <div class="stats-overview-grid">
+            <div class="stat-card vertical-card">
+                <i class="fas fa-users-viewfinder"></i>
+                <div class="stat-content">
+                    <h3 id="assignedCount">0</h3>
+                    <p>Assigned Clients</p>
+                </div>
+            </div>
+            <div class="stat-card vertical-card">
+                <i class="fas fa-star" style="color: var(--primary);"></i>
+                <div class="stat-content">
+                    <h3 id="trainerRating">N/A</h3>
+                    <p>Average Rating</p>
+                </div>
+            </div>
+            <div class="stat-card vertical-card">
+                <i class="fas fa-calendar-check"></i>
+                <div class="stat-content">
+                    <h3 id="todaySessions">0</h3>
+                    <p>Today's Sessions</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-tabs">
+            <button class="tab-btn active" onclick="showTab('clients', event)"><i class="fas fa-user-friends"></i>
+                Clients &
+                Progress</button>
+            <button class="tab-btn" onclick="showTab('goalPlan', event)"><i class="fas fa-tasks"></i> Goal
+                Plan</button>
+            <button class="tab-btn" onclick="showTab('sessionSchedule', event)"><i class="fas fa-calendar-alt"></i>
+                Session Schedule</button>
+        </div>
+
+        <!-- Goal Plan Tab Content -->
+        <div id="goalPlanTab" class="tab-content">
+            <div class="trainer-layout">
+                <!-- Members List Sidebar -->
+                <aside class="clients-sidebar vertical-card">
+                    <h3><i class="fas fa-users"></i> Select Member</h3>
+                    <div id="goalPlanMembersList" class="clients-list">
+                        <p class="text-muted">Loading members...</p>
+                    </div>
+                </aside>
+
+                <!-- Member Goal Management View -->
+                <main class="client-progress vertical-card">
+                    <div id="noGoalMemberSelected" class="empty-state">
+                        <i class="fas fa-user-edit"></i>
+                        <h3>Select a member to manage goal plans</h3>
+                    </div>
+
+                    <div id="goalMemberDetailView" style="display: none;">
+                        <div class="detail-header" style="margin-bottom: 20px;">
+                            <div class="client-info">
+                                <h2 id="goalMemberName">Name</h2>
+                                <p id="goalMemberStatus">Assign and manage goals for this member</p>
+                                <input type="hidden" id="selectedMemberId">
+                            </div>
+                            <button class="btn btn-primary"
+                                onclick="window.location.href='assign-goals.html?clientId=' + (selectedClientId || '')">
+                                <i class="fas fa-plus"></i> New Goal Plan
+                            </button>
+                        </div>
+
+                        <!-- Goal Sub-Tabs -->
+                        <div class="sub-tabs-wrapper"
+                            style="display: flex; gap: 15px; margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px;">
+                            <button class="sub-tab btn-tab active" onclick="switchGoalMemberTab('current', this)"
+                                style="background: transparent; border: none; color: #888; padding: 8px 15px; cursor: pointer; font-weight: 700; transition: all 0.3s ease; border-bottom: 2px solid transparent; display: flex; align-items: center; gap: 8px; font-size: 0.95rem;">
+                                <i class="fas fa-list-check"></i> Active Goals
+                            </button>
+                            <button class="sub-tab btn-tab" onclick="switchGoalMemberTab('history', this)"
+                                style="background: transparent; border: none; color: #888; padding: 8px 15px; cursor: pointer; font-weight: 700; transition: all 0.3s ease; border-bottom: 2px solid transparent; display: flex; align-items: center; gap: 8px; font-size: 0.95rem;">
+                                <i class="fas fa-archive"></i> Plan History
+                            </button>
+                        </div>
+
+                        <style>
+                            .sub-tab.active {
+                                color: var(--primary) !important;
+                                border-bottom-color: var(--primary) !important;
+                            }
+
+                            .sub-tab:hover {
+                                color: white !important;
+                            }
+                        </style>
+
+                        <div id="activeGoalsSection" class="goal-tab-content">
+                            <h4 style="margin-bottom: 15px; color: var(--primary);"><i class="fas fa-list-check"></i>
+                                Current Goal Plan</h4>
+                            <div id="goalPlanList" class="log-container"
+                                style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                                <p class="text-muted">No goals assigned.</p>
+                            </div>
+                        </div>
+
+                        <!-- Completed Plans History Section -->
+                        <div id="completedPlansSection" class="goal-tab-content" style="display: none;">
+                            <h3 style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                                <i class="fas fa-archive" style="color: var(--primary);"></i>
+                                Completed Goal Plans
+                            </h3>
+                            <div id="completedPlansList" class="history-grid"
+                                style="display: grid; grid-template-columns: 1fr; gap: 20px;">
+                                <!-- Completed plans will be injected here -->
+                                <p class="text-muted">No completed plans yet.</p>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+
+        <!-- Session Schedule Tab Content -->
+        <div id="sessionScheduleTab" class="tab-content">
+            <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 25px; max-width: 1200px; margin: 0 auto;">
+                <section class="overview-section vertical-card" style="height: fit-content; min-height: unset;">
+                    <div class="section-title-row">
+                        <h3><i class="fas fa-clock"></i> Session Schedule</h3>
+                        <button class="btn btn-primary btn-sm" onclick="openScheduleModal()">+ New</button>
+                    </div>
+                    <div id="scheduleList" class="info-list">
+                        <p class="text-muted">Loading schedule...</p>
+                    </div>
+                </section>
+
+                <section class="overview-section vertical-card" style="height: fit-content; min-height: unset;">
+                    <h3><i class="fas fa-comment-dots"></i> Review Sessions</h3>
+                    <div id="clientFeedback" class="info-list">
+                        <p class="text-muted">Loading feedback...</p>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- Clients Tab Content -->
+        <div id="clientsTab" class="tab-content active">
+            <div class="trainer-layout">
+                <!-- Clients List Sidebar -->
+                <aside class="clients-sidebar vertical-card">
+                    <h3><i class="fas fa-users"></i> My Clients</h3>
+                    <div style="margin-bottom: 15px;">
+                        <input type="text" id="clientSearchInput" class="chat-input"
+                            placeholder="Search clients by name..."
+                            style="width: 100%; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: white; padding: 10px; border-radius: 8px;"
+                            oninput="filterClients()">
+                    </div>
+                    <div id="clientsList" class="clients-list">
+                        <p class="text-muted">Loading clients</p>
+                    </div>
+                </aside>
+
+                <!-- Client Progress View -->
+                <main class="client-progress vertical-card">
+                    <div id="noClientSelected" class="empty-state">
+                        <i class="fas fa-user-clock"></i>
+                        <h3>Select a client to view progress</h3>
+                    </div>
+
+                    <div id="clientDetailView" style="display: none;">
+                        <div class="detail-header">
+                            <div class="client-info">
+                                <h2 id="clientName">Name</h2>
+                                <p id="clientGoals" style="font-size: 0.85rem; color: #888;">Goals: ...</p>
+                            </div>
+                            <div class="header-controls" style="display: none;">
+                                <!-- Old Date Selector Removed -->
+                            </div>
+                        </div>
+
+
+                        <!-- Goals & Progress 2-Column Layout -->
+
+                        <!-- Tabs for Client Detail View -->
+                        <div class="trainer-tabs"
+                            style="display: flex; gap: 20px; margin-bottom: 25px; border-bottom: 1px solid #333; padding-bottom: 0;">
+                            <button class="tab-btn active" onclick="switchTrainerTab('details')" id="tabBtn-details"
+                                style="background: none; border: none; font-weight: 700; color: var(--primary); padding: 10px 15px; cursor: pointer; border-bottom: 3px solid var(--primary); font-size: 1rem; letter-spacing: 1px; text-transform: uppercase; transition: all 0.3s ease;">
+                                <i class="fas fa-info-circle" style="margin-right: 8px;"></i> Client Details
+                            </button>
+                            <button class="tab-btn" onclick="switchTrainerTab('messages')" id="tabBtn-messages"
+                                style="background: none; border: none; font-weight: 700; color: #666; padding: 10px 15px; cursor: pointer; border-bottom: 3px solid transparent; font-size: 1rem; letter-spacing: 1px; text-transform: uppercase; transition: all 0.3s ease;">
+                                <i class="fas fa-comments" style="margin-right: 8px;"></i> Direct Message
+                            </button>
+                            <button class="tab-btn" onclick="switchTrainerTab('activity')" id="tabBtn-activity"
+                                style="background: none; border: none; font-weight: 700; color: #666; padding: 10px 15px; cursor: pointer; border-bottom: 3px solid transparent; font-size: 1rem; letter-spacing: 1px; text-transform: uppercase; transition: all 0.3s ease;">
+                                <i class="fas fa-running" style="margin-right: 8px;"></i> Activity Stats
+                            </button>
+                            <button class="tab-btn" onclick="switchTrainerTab('goals')" id="tabBtn-goals"
+                                style="background: none; border: none; font-weight: 700; color: #666; padding: 10px 15px; cursor: pointer; border-bottom: 3px solid transparent; font-size: 1rem; letter-spacing: 1px; text-transform: uppercase; transition: all 0.3s ease;">
+                                <i class="fas fa-bullseye" style="margin-right: 8px;"></i> Goal Progress
+                            </button>
+                        </div>
+
+                        <!-- Tab 0: Client Details (New) -->
+                        <div id="trainer-tab-details" class="trainer-tab-content active"
+                            style="display: block; animation: fadeIn 0.3s ease; height: 100%;">
+                            <div class="client-details-card vertical-card" style="margin-bottom: 20px;">
+                                <h3 style="color: var(--primary); margin-bottom: 20px;"><i class="fas fa-user"></i>
+                                    Personal Information</h3>
+                                <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 25px;">
+                                    <div
+                                        style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
+                                        <p style="color: #666; font-size: 0.95rem; margin: 0; font-weight: 500;">Email
+                                        </p>
+                                        <p id="detailClientEmail"
+                                            style="font-size: 1.05rem; font-weight: 600; margin: 0; color: #333;">-</p>
+                                    </div>
+                                    <div
+                                        style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
+                                        <p style="color: #666; font-size: 0.95rem; margin: 0; font-weight: 500;">Age</p>
+                                        <p id="detailClientAge"
+                                            style="font-size: 1.05rem; font-weight: 600; margin: 0; color: #333;">-</p>
+                                    </div>
+                                    <div
+                                        style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
+                                        <p style="color: #666; font-size: 0.95rem; margin: 0; font-weight: 500;">Weight
+                                        </p>
+                                        <p id="detailClientWeight"
+                                            style="font-size: 1.05rem; font-weight: 600; margin: 0; color: #333;">-</p>
+                                    </div>
+                                    <div
+                                        style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
+                                        <p style="color: #666; font-size: 0.95rem; margin: 0; font-weight: 500;">Height
+                                        </p>
+                                        <p id="detailClientHeight"
+                                            style="font-size: 1.05rem; font-weight: 600; margin: 0; color: #333;">-</p>
+                                    </div>
+                                    <div
+                                        style="display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 8px;">
+                                        <p
+                                            style="color: #666; font-size: 0.95rem; margin: 0; font-weight: 500; min-width: 120px;">
+                                            Fitness Goals</p>
+                                        <p id="detailClientGoals"
+                                            style="font-size: 1.05rem; font-weight: 600; margin: 0; color: #333; text-align: right;">
+                                            -</p>
+                                    </div>
+                                </div>
+                                <h3 style="color: var(--primary); margin-bottom: 15px;"><i
+                                        class="fas fa-file-medical"></i> Medical Reports</h3>
+                                <div id="detailClientMedicalReports" class="info-list">
+                                    <p class="text-muted">Loading medical reports...</p>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- Tab 1: Direct Message (New) -->
+                        <!-- Tab 1: Direct Message (New) -->
+                        <div id="trainer-tab-messages" class="trainer-tab-content"
+                            style="display: none; animation: fadeIn 0.3s ease; height: 100%;">
+                            <div class="chat-container">
+                                <div class="chat-header">
+                                    <h4 style="color:var(--primary);"><i class="fas fa-comments"></i> Client
+                                        Conversation</h4>
+                                </div>
+                                <div id="messageHistory" class="chat-messages">
+                                    <!-- Messages injected here -->
+                                    <div class="empty-chat">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                        <p>Loading conversation...</p>
+                                    </div>
+                                </div>
+                                <div class="chat-input-area">
+                                    <input type="text" id="memberMessageInput" class="chat-input"
+                                        placeholder="Type your message..."
+                                        onkeypress="if(event.key==='Enter') sendDirectMessage()">
+                                    <button class="chat-send-btn" onclick="sendDirectMessage()">
+                                        <i class="fas fa-paper-plane"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tab 2: Activity (Moved) -->
+                        <div id="trainer-tab-activity" class="trainer-tab-content"
+                            style="display: none; animation: fadeIn 0.3s ease;">
+                            <!-- Activity Tracker Controls -->
+                            <div class="activity-controls vertical-card" style="margin-bottom: 20px;">
+                                <h2
+                                    style="margin-top: 0; margin-bottom: 20px; font-size: 1.6rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: white;">
+                                    Activity Tracker</h2>
+                                <div class="date-picker-group">
+                                    <label>View Date</label>
+                                    <input type="date" id="clientActivityDatePicker" class="custom-date-input">
+                                </div>
+                                <div class="filter-group">
+                                    <button class="filter-tab active" data-filter="daily"
+                                        onclick="setClientActivityFilter('daily')">Daily</button>
+                                    <button class="filter-tab" data-filter="weekly"
+                                        onclick="setClientActivityFilter('weekly')">Weekly</button>
+                                    <button class="filter-tab" data-filter="monthly"
+                                        onclick="setClientActivityFilter('monthly')">Monthly</button>
+                                </div>
+                            </div>
+
+                            <!-- Stats Grid -->
+                            <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr);">
+                                <div class="stat-item vertical-card">
+                                    <div class="stat-ring-container">
+                                        <svg viewBox="0 0 100 100">
+                                            <circle class="stat-ring-bg" cx="50" cy="50" r="45" />
+                                            <circle id="clientCalRing" class="stat-ring-bar ring-calories" cx="50"
+                                                cy="50" r="45" stroke-dasharray="282.7" stroke-dashoffset="282.7" />
+                                        </svg>
+                                        <div class="stat-ring-info">
+                                            <i class="fas fa-fire"></i>
+                                            <h2 id="clientCalories">0</h2>
+                                        </div>
+                                    </div>
+                                    <p id="calLabel">Calories</p>
+                                    <small id="clientCalTarget">Target: 2000</small>
+                                </div>
+                                <div class="stat-item vertical-card">
+                                    <div class="stat-ring-container">
+                                        <svg viewBox="0 0 100 100">
+                                            <circle class="stat-ring-bg" cx="50" cy="50" r="45" />
+                                            <circle id="clientWaterRing" class="stat-ring-bar ring-water" cx="50"
+                                                cy="50" r="45" stroke-dasharray="282.7" stroke-dashoffset="282.7" />
+                                        </svg>
+                                        <div class="stat-ring-info">
+                                            <i class="fas fa-tint"></i>
+                                            <h2 id="clientWater">0</h2>
+                                        </div>
+                                    </div>
+                                    <p id="waterLabel">Liters</p>
+                                    <small id="clientWaterTarget">Target: 3.5L</small>
+                                </div>
+                                <div class="stat-item vertical-card">
+                                    <div class="stat-ring-container">
+                                        <svg viewBox="0 0 100 100">
+                                            <circle class="stat-ring-bg" cx="50" cy="50" r="45" />
+                                            <circle id="clientSleepRing" class="stat-ring-bar ring-sleep" cx="50"
+                                                cy="50" r="45" stroke-dasharray="282.7" stroke-dashoffset="282.7" />
+                                        </svg>
+                                        <div class="stat-ring-info">
+                                            <i class="fas fa-moon"></i>
+                                            <h2 id="clientSleep">0</h2>
+                                        </div>
+                                    </div>
+                                    <p id="sleepLabel">Hours</p>
+                                    <small id="clientSleepTarget">Target: 8h</small>
+                                </div>
+                            </div>
+
+                            <!-- Chart -->
+                            <div class="vertical-card chart-card mini-chart-redesign" style="margin-top: 20px;">
+                                <div class="mini-chart-header">
+                                    <h3><i class="fas fa-chart-simple"></i> Activity Trends</h3>
+                                    <p id="clientChartLabel">Daily Progress</p>
+                                </div>
+                                <div class="mini-chart-canvas-wrapper" style="height: 350px; position: relative;">
+                                    <canvas id="clientActivityChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tab 3: Goals -->
+                        <div id="trainer-tab-goals" class="trainer-tab-content"
+                            style="display: none; animation: fadeIn 0.3s ease;">
+                            <div class="goals-two-column-layout"
+                                style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: stretch; margin-bottom: 30px;">
+
+                                <!-- Column 1: Daily Goals Tracker (Checklist) - Using Member Dashboard Styles -->
+                                <div class="goals-tracker" style="margin: 0; display: flex; flex-direction: column;">
+                                    <div class="dashboard-header" style="margin-bottom: 20px;">
+                                        <h2
+                                            style="font-size: 1.4rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: white;">
+                                            Daily Goals Tracker</h2>
+                                        <p>Client's checklist for the selected date.</p>
+                                    </div>
+
+                                    <!-- Date Navigator (Copied from Member Dashboard) -->
+                                    <div class="date-navigator" style="margin-bottom: 20px;">
+                                        <button id="prevDayBtn" class="nav-btn">
+                                            <i class="fas fa-chevron-left"></i>
+                                        </button>
+                                        <div class="date-display">
+                                            <span id="currentDateLabel">Today</span>
+                                        </div>
+                                        <button id="nextDayBtn" class="nav-btn">
+                                            <i class="fas fa-chevron-right"></i>
+                                        </button>
+
+                                        <!-- Calendar Dropdown Wrapper -->
+                                        <div class="calendar-dropdown-wrapper">
+                                            <button id="calendarToggleBtn" class="calendar-toggle-btn">
+                                                <i class="fas fa-calendar-alt"></i> Calendar
+                                            </button>
+                                            <!-- Goal Completion Calendar (Dropdown) -->
+                                            <div id="goalCalendar" class="goal-calendar">
+                                                <!-- Calendar will be rendered by JavaScript -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="goals-grid" id="trainerDailyGoalsGrid"
+                                        style="max-height: 400px; overflow-y: auto; padding-right: 5px;">
+                                        <!-- Goals rendered here -->
+                                    </div>
+                                    <div id="trainerEmptyGoalsState"
+                                        style="display: none; text-align: center; padding: 40px; background: white; border-radius: 12px; margin-top: 10px;">
+                                        <i class="fas fa-clipboard-list"
+                                            style="font-size: 3rem; color: #eee; margin-bottom: 15px;"></i>
+                                        <h3 style="color: var(--dark); margin-bottom: 5px;">No Active Goals</h3>
+                                        <p style="color: var(--text-muted); font-size: 0.9rem;">No daily tasks assigned
+                                            for
+                                            this date.</p>
+                                    </div>
+                                </div>
+
+                                <!-- Column 2: Goal Progress Tracker (Rings) - Using Exact Member Dashboard HTML -->
+                                <div class="goal-progress-card"
+                                    style="margin: 0; display: flex; flex-direction: column;">
+                                    <h3><i class="fas fa-bullseye"></i> Goal Progress Tracking</h3>
+                                    <div class="goal-progress-layout"
+                                        style="flex: 1; align-items: center; justify-content: center;">
+                                        <!-- Rings Section -->
+                                        <div class="progress-rings-wrapper">
+                                            <svg class="rings-svg" viewBox="0 0 100 100">
+                                                <!-- Background Rings -->
+                                                <circle class="ring-bg" cx="50" cy="50" r="45" />
+                                                <circle class="ring-bg" cx="50" cy="50" r="35" />
+                                                <circle class="ring-bg" cx="50" cy="50" r="25" />
+
+                                                <!-- Progress Bars -->
+                                                <circle id="trainerRingOuter" class="ring-bar ring-outer" cx="50"
+                                                    cy="50" r="45" stroke-dasharray="282.7" stroke-dashoffset="282.7" />
+                                                <circle id="trainerRingMiddle" class="ring-bar ring-middle" cx="50"
+                                                    cy="50" r="35" stroke-dasharray="219.9" stroke-dashoffset="219.9" />
+                                                <circle id="trainerRingInner" class="ring-bar ring-inner" cx="50"
+                                                    cy="50" r="25" stroke-dasharray="157.1" stroke-dashoffset="157.1" />
+                                            </svg>
+                                            <div class="rings-info">
+                                                <span id="trainerMainProgressLabel" class="main-pct">0%</span>
+                                                <span class="main-label">Overall</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Status & Legend Section -->
+                                        <div class="goal-status-content" style="width: 100%;">
+                                            <div class="status-header" style="text-align: center; margin-bottom: 15px;">
+                                                <span id="trainerSmartStatusLabel"
+                                                    class="smart-status">Calculating...</span>
+                                            </div>
+
+                                            <div class="legend-grid">
+                                                <div class="legend-item">
+                                                    <div class="legend-label-group">
+                                                        <div class="color-dot dot-blue"></div>
+                                                        <div class="legend-text">
+                                                            <h4>Active Plan Focus</h4>
+                                                            <p>Weight, Nutrition & Meals</p>
+                                                        </div>
+                                                    </div>
+                                                    <span id="trainerOuterPctText" class="legend-value">0%</span>
+                                                </div>
+                                                <div class="legend-item">
+                                                    <div class="legend-label-group">
+                                                        <div class="color-dot dot-purple"></div>
+                                                        <div class="legend-text">
+                                                            <h4>Plan Adherence</h4>
+                                                            <p>Workouts & Exercises</p>
+                                                        </div>
+                                                    </div>
+                                                    <span id="trainerMiddlePctText" class="legend-value">0%</span>
+                                                </div>
+                                                <div class="legend-item">
+                                                    <div class="legend-label-group">
+                                                        <div class="color-dot dot-yellow"></div>
+                                                        <div class="legend-text">
+                                                            <h4>Overall Wellness</h4>
+                                                            <p>Habits, Sleep & Hydration</p>
+                                                        </div>
+                                                    </div>
+                                                    <span id="trainerInnerPctText" class="legend-value">0%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                        <!-- Responsive Style for this Layout -->
+                        <style>
+                            @media (max-width: 900px) {
+                                .goals-two-column-layout {
+                                    grid-template-columns: 1fr !important;
+                                }
+
+                                .goal-progress-layout {
+                                    flex-direction: column !important;
+                                    text-align: center;
+                                }
+                            }
+
+                            /* Direct Message Chat Styles */
+                            .chat-container {
+                                display: flex;
+                                flex-direction: column;
+                                height: 100%;
+                                background: #ffffff;
+                                border-radius: 12px;
+                                overflow: hidden;
+                                border: 1px solid #e0e0e0;
+                                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                            }
+
+                            .chat-header {
+                                padding: 15px 20px;
+                                background: #f8f9fa;
+                                border-bottom: 1px solid #e0e0e0;
+                                display: flex;
+                                align-items: center;
+                                gap: 10px;
+                            }
+
+                            .chat-header h4 {
+                                margin: 0;
+                                font-size: 1.1rem;
+                                color: #333;
+                                letter-spacing: 0.5px;
+                            }
+
+                            .chat-messages {
+                                flex: 1;
+                                overflow-y: auto;
+                                padding: 20px;
+                                display: flex;
+                                flex-direction: column;
+                                gap: 15px;
+                                background: #ffffff;
+                            }
+
+                            /* Scrollbar for chat */
+                            .chat-messages::-webkit-scrollbar {
+                                width: 6px;
+                            }
+
+                            .chat-messages::-webkit-scrollbar-track {
+                                background: #f5f5f5;
+                            }
+
+                            .chat-messages::-webkit-scrollbar-thumb {
+                                background: #ccc;
+                                border-radius: 3px;
+                            }
+
+                            .chat-messages::-webkit-scrollbar-thumb:hover {
+                                background: #999;
+                            }
+
+                            .message-wrapper {
+                                max-width: 80%;
+                                display: flex;
+                                flex-direction: column;
+                                position: relative;
+                            }
+
+                            .message-wrapper.sent {
+                                align-self: flex-end;
+                                align-items: flex-end;
+                            }
+
+                            .message-wrapper.received {
+                                align-self: flex-start;
+                                align-items: flex-start;
+                            }
+
+                            .message-bubble {
+                                padding: 12px 18px;
+                                border-radius: 18px;
+                                font-size: 0.95rem;
+                                line-height: 1.5;
+                                position: relative;
+                                word-wrap: break-word;
+                                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                            }
+
+                            .message-wrapper.sent .message-bubble {
+                                background: var(--primary);
+                                /* Uses standard primary color */
+                                color: #fff;
+                                border-bottom-right-radius: 4px;
+                            }
+
+                            .message-wrapper.received .message-bubble {
+                                background: #f0f0f0;
+                                color: #333;
+                                border-bottom-left-radius: 4px;
+                            }
+
+                            .message-meta {
+                                font-size: 0.7rem;
+                                color: #999;
+                                margin-top: 4px;
+                                padding: 0 4px;
+                            }
+
+                            .delete-msg-btn {
+                                position: absolute;
+                                top: 50%;
+                                transform: translateY(-50%);
+                                background: rgba(255, 71, 87, 0.85);
+                                color: white;
+                                border: none;
+                                border-radius: 50%;
+                                width: 22px;
+                                height: 22px;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                cursor: pointer;
+                                font-size: 0.7rem;
+                                opacity: 1;
+                                transition: all 0.2s ease;
+                                box-shadow: 0 2px 6px rgba(255, 71, 87, 0.3);
+                            }
+
+                            .delete-msg-btn:hover {
+                                background: #ff4757;
+                                transform: translateY(-50%) scale(1.15);
+                                box-shadow: 0 3px 8px rgba(255, 71, 87, 0.5);
+                            }
+
+                            .message-wrapper.sent .delete-msg-btn {
+                                right: -32px;
+                            }
+
+                            .chat-input-area {
+                                padding: 15px;
+                                background: #f8f9fa;
+                                border-top: 1px solid #e0e0e0;
+                                display: flex;
+                                gap: 10px;
+                            }
+
+                            .chat-input {
+                                flex: 1;
+                                background: #ffffff;
+                                border: 1px solid #ddd;
+                                color: #333;
+                                padding: 12px 15px;
+                                border-radius: 25px;
+                                outline: none;
+                                transition: border-color 0.3s;
+                            }
+
+                            .chat-input:focus {
+                                border-color: var(--primary);
+                                box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+                            }
+
+                            .chat-input::placeholder {
+                                color: #999;
+                            }
+
+                            .chat-send-btn {
+                                background: var(--primary);
+                                color: white;
+                                border: none;
+                                width: 45px;
+                                height: 45px;
+                                border-radius: 50%;
+                                cursor: pointer;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                transition: transform 0.2s;
+                                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+                            }
+
+                            .chat-send-btn:hover {
+                                transform: scale(1.05);
+                            }
+
+                            .empty-chat {
+                                text-align: center;
+                                color: #999;
+                                margin-top: 50px;
+                            }
+
+                            .empty-chat i {
+                                font-size: 3rem;
+                                margin-bottom: 15px;
+                                color: #ddd;
+                            }
+
+                            .empty-chat p {
+                                color: #666;
+                            }
+
+                            .empty-chat small {
+                                color: #999;
+                            }
+                        </style>
+
+
+
+
+                    </div>
+                </main>
+            </div>
+        </div>
+        </main>
+    </div>
+    </div>
+    </div>
+
+    <!-- Communication Logic (Embedded for simplicity) -->
+    <script>
+        // ... (rest of script) ...
+
+        async function loadMemberMessages() {
+            if (!selectedClientId) return;
+            const historyEl = document.getElementById('messageHistory');
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/trainer/messages/members/${selectedClientId}`, {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                });
+                if (res.ok) {
+                    const messages = await res.json();
+                    if (messages.length === 0) {
+                        historyEl.innerHTML = `
+                            <div class="empty-chat">
+                                <i class="far fa-comments"></i>
+                                <p>No messages yet.</p>
+                                <small>Start the conversation!</small>
+                            </div>`;
+                    } else {
+                        historyEl.innerHTML = messages.map(m => {
+                            const isTrainer = m.senderType === 'TRAINER';
+                            const date = new Date(m.timestamp).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+                            let deleteButton = '';
+                            if (isTrainer) {
+                                deleteButton = `
+                                    <button class="delete-msg-btn" onclick="deleteMessage('${m.id}', event)" title="Delete Message">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                `;
+                            }
+
+                            return `
+                                <div class="message-wrapper ${isTrainer ? 'sent' : 'received'}">
+                                    ${deleteButton}
+                                    <div class="message-bubble">
+                                        ${m.content}
+                                    </div>
+                                    <div class="message-meta">${date}</div>
+                                </div>
+                            `;
+                        }).join('');
+                    }
+                    historyEl.scrollTop = historyEl.scrollHeight;
+                }
+            } catch (err) {
+                console.error("Error loading messages", err);
+                historyEl.innerHTML = '<div class="empty-chat"><p>Error loading messages.</p></div>';
+            }
+        }
+
+        window.deleteMessage = async (id, event) => {
+            if (event) event.stopPropagation(); // Prevent bubbling if needed
+            if (!confirm('Are you sure you want to delete this message?')) return;
+
+            // Optimistic UI update (optional, but good for UX)
+            // For now, let's stick to reload on success to be safe
+
+            try {
+                // Ensure API_BASE_URL is defined/accessible
+                const url = `${API_BASE_URL}/api/trainer/messages/${id}`;
+                console.log("Deleting message:", url);
+
+                const res = await fetch(url, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (res.ok) {
+                    loadMemberMessages(); // Refresh list
+                    // toast/notification success?
+                } else {
+                    const errText = await res.text();
+                    console.error("Delete failed:", res.status, errText);
+                    alert(`Failed to delete message. Server responded with: ${res.status}`);
+                }
+            } catch (err) {
+                console.error("Error deleting message:", err);
+                alert('Error connecting to server to delete message.');
+            }
+        };
+
+        async function sendDirectMessage() {
+            const input = document.getElementById('memberMessageInput');
+            const content = input.value.trim();
+            if (!content || !selectedClientId) return;
+
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/trainer/messages`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        member: { id: selectedClientId },
+                        content: content,
+                        senderType: 'TRAINER' // If needed by backend
+                    })
+                });
+                if (res.ok) {
+                    input.value = '';
+                    loadMemberMessages();
+                }
+            } catch (err) {
+                console.error("Error sending message", err);
+            }
+        }
+    </script>
+    <div id="scheduleModal" class="checklist-modal-overlay" style="display: none;">
+        <div class="checklist-modal vertical-card" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3><i class="fas fa-calendar-plus"></i> Schedule New Session</h3>
+                <button class="close-btn" onclick="closeScheduleModal()">&times;</button>
+            </div>
+            <form id="scheduleForm" onsubmit="handleScheduleSubmit(event)"
+                style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
+                <div class="form-group">
+                    <label>Select Member</label>
+                    <select id="scheduleMember" required
+                        style="width: 100%; padding: 10px; border-radius: 8px; background: #111; border: 1px solid #333; color: white;"></select>
+                </div>
+                <div class="form-row" style="display: flex; gap: 10px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label>Start Time</label>
+                        <input type="datetime-local" id="startTime" required
+                            style="width: 100%; padding: 10px; border-radius: 8px; background: #111; border: 1px solid #333; color: white;">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label>End Time</label>
+                        <input type="datetime-local" id="endTime" required
+                            style="width: 100%; padding: 10px; border-radius: 8px; background: #111; border: 1px solid #333; color: white;">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Session Type</label>
+                    <select id="sessionType" onchange="toggleLinkField()"
+                        style="width: 100%; padding: 10px; border-radius: 8px; background: #111; border: 1px solid #333; color: white;">
+                        <option value="ONLINE">Online (Virtual)</option>
+                        <option value="OFFLINE">Offline (Gym)</option>
+                    </select>
+                </div>
+                <div class="form-group" id="linkField">
+                    <label>Meeting Link</label>
+                    <input type="url" id="meetingLink" placeholder="Zoom/Google Meet URL"
+                        style="width: 100%; padding: 10px; border-radius: 8px; background: #111; border: 1px solid #333; color: white;">
+                </div>
+                <div class="form-group">
+                    <label>Notes</label>
+                    <textarea id="sessionNotes" placeholder="Any special instructions..."
+                        style="width: 100%; padding: 10px; border-radius: 8px; background: #111; border: 1px solid #333; color: white;"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Schedule Session</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Removed Goal Modal - Replaced by assign-goals.html -->
+
+    <script src="script.js?v=1.1"></script>
+    <script>
+        // API_BASE_URL is defined in script.js. If not, fallback to localhost:5000
+        const BASE_URL = typeof API_BASE_URL !== 'undefined' ? API_BASE_URL : 'http://localhost:5000';
+        let selectedClientId = localStorage.getItem('selectedClientId') || null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const getAuthToken = () => localStorage.getItem('token');
+            const token = getAuthToken(); // Initial check
+            if (!token) { window.location.href = 'login.html'; return; }
+
+            // const today = new Date().toISOString().split('T')[0];
+            // document.getElementById('progressDate').value = today; // Removed: Using Date Navigator
+
+
+            let currentFrequency = 'daily';
+            let updateInterval = null;
+            let healthChartInst = null;
+
+            // Main Client Progress Loader (Fix for missing function)
+            window.loadClientProgress = () => {
+                const activityTab = document.getElementById('trainer-tab-activity');
+                // Check if activity tab is active
+                if (activityTab && activityTab.classList.contains('active')) {
+                    if (typeof loadClientActivity === 'function') loadClientActivity();
+                } else {
+                    // Default to Goals
+                    if (typeof initTrainerGoalTracker === 'function') initTrainerGoalTracker();
+                }
+            };
+
+            function startPolling() {
+                if (updateInterval) clearInterval(updateInterval);
+                updateInterval = setInterval(() => {
+                    if (selectedClientId && document.getElementById('clientsTab').classList.contains('active')) {
+                        loadClientProgress();
+                    }
+                }, 15000); // 15 seconds
+            }
+
+            function stopPolling() {
+                if (updateInterval) clearInterval(updateInterval);
+                updateInterval = null;
+            }
+
+
+            // Tab Switching Logic
+            window.showTab = (tabName, event) => {
+                // Deactivate all
+                document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.nav-links .nav-link').forEach(link => link.classList.remove('active'));
+
+                // Activate Content
+                const tabEl = document.getElementById(tabName + 'Tab');
+                if (tabEl) tabEl.classList.add('active');
+
+                if (tabName !== 'clients') stopPolling();
+
+                // Activate all controls pointing to this tab (Header links AND Buttons)
+                if (tabName !== 'clients') stopPolling();
+
+                // Activate all controls pointing to this tab (Header links AND Buttons)
+                const controls = document.querySelectorAll(`[onclick*="showTab('${tabName}'"]`);
+                controls.forEach(control => control.classList.add('active'));
+            };
+
+            // Trainer Client Detail Tab Switching
+            window.switchTrainerTab = (tabName) => {
+                // Update Buttons
+                document.querySelectorAll('.trainer-tabs .tab-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.style.color = '#666';
+                    btn.style.borderColor = 'transparent';
+                });
+                const activeBtn = document.getElementById('tabBtn-' + tabName);
+                if (activeBtn) {
+                    activeBtn.classList.add('active');
+                    activeBtn.style.color = 'var(--primary)';
+                    activeBtn.style.borderColor = 'var(--primary)';
+                }
+
+                // Update Content
+                document.querySelectorAll('.trainer-tab-content').forEach(content => {
+                    content.style.display = 'none';
+                    content.classList.remove('active');
+                });
+                const activeContent = document.getElementById('trainer-tab-' + tabName);
+                if (activeContent) {
+                    activeContent.style.display = 'block';
+                    setTimeout(() => activeContent.classList.add('active'), 10);
+                }
+
+                // Specific logic for tabs
+                if (tabName === 'messages') {
+                    loadMemberMessages();
+                } else if (tabName === 'activity') {
+                    loadClientActivity();
+                } else if (tabName === 'goals') {
+                    initTrainerGoalTracker();
+                }
+            };
+
+
+            // Trainer Goal Activity State
+            let clientGoalDate = new Date().toISOString().split('T')[0];
+
+            window.initTrainerGoalTracker = () => {
+                if (!selectedClientId) return;
+                loadClientGoalProgress(selectedClientId, clientGoalDate);
+
+                // Update Date Display
+                const dateLabel = document.querySelector('#trainer-tab-goals #currentDateLabel');
+                if (dateLabel) {
+                    const today = new Date().toISOString().split('T')[0];
+                    if (clientGoalDate === today) dateLabel.innerText = "Today";
+                    else dateLabel.innerText = new Date(clientGoalDate).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+                }
+
+                // Attach Listeners to Trainer Nav Buttons if not already attached
+                const prevBtn = document.querySelector('#trainer-tab-goals #prevDayBtn');
+                const nextBtn = document.querySelector('#trainer-tab-goals #nextDayBtn');
+
+                // Remove old listeners to avoid duplicates (using cloned node trick or just re-assigning onclick)
+                if (prevBtn) prevBtn.onclick = () => changeTrainerGoalDate(-1);
+                if (nextBtn) nextBtn.onclick = () => changeTrainerGoalDate(1);
+            };
+
+            window.changeTrainerGoalDate = (days) => {
+                const date = new Date(clientGoalDate);
+                date.setDate(date.getDate() + days);
+                clientGoalDate = date.toISOString().split('T')[0];
+                initTrainerGoalTracker();
+            };
+
+            window.loadClientGoalProgress = async (clientId, dateStr) => {
+                const token = localStorage.getItem('token');
+                try {
+                    const res = await fetch(`${BASE_URL}/api/trainer/users/${clientId}/progress?date=${dateStr}`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (res.ok) {
+                        const data = await res.json();
+
+                        // Render Goals Grid (ReadOnly)
+                        const goalsByCategory = {};
+                        if (data.goals) {
+                            data.goals.forEach(g => {
+                                if (!goalsByCategory[g.category]) goalsByCategory[g.category] = [];
+                                goalsByCategory[g.category].push(g);
+                            });
+                        }
+
+                        renderTrainerGoals(goalsByCategory, data.completedGoalIds || []);
+
+                        // Update Rings - robust frontend calculation using raw goals data
+                        // This ensures parity with the checkboxes regardless of backend aggregation state
+                        if (data.goals) {
+                            console.log("DEBUG: Goals found:", data.goals.length, data.goals);
+                            console.log("DEBUG: Completed IDs:", data.completedGoalIds);
+
+                            const completedSet = new Set(data.completedGoalIds || []);
+
+                            // DEBUG: Log all unique categories found to identify mismatches
+                            const uniqueCats = [...new Set(data.goals.map(g => g.category))];
+                            console.log("DEBUG: Unique Categories:", uniqueCats);
+
+                            // Define Category Groups (Expanded)
+                            const groups = {
+                                outer: ['Weight', 'Nutrition', 'Meal', 'Diet', 'Food', 'Calories', 'Goal'],
+                                middle: ['Workout', 'Exercise', 'Cardio', 'Strength', 'Training', 'Gym', 'Sport', 'Run', 'Walk', 'Yoga', 'HIIT', 'Pilates', 'Steps'],
+                                inner: ['Sleep', 'Habit', 'Hydration', 'Water', 'Rest', 'Recovery', 'Mindfulness', 'Meditation', 'Mood']
+                            };
+
+                            const calcGroupProgress = (groupCats) => {
+                                // Filter goals belonging to this group (Case-Insensitive Partial Match)
+                                const groupGoals = data.goals.filter(g => {
+                                    const cat = (g.category || '').toLowerCase();
+                                    return groupCats.some(c => cat.includes(c.toLowerCase()));
+                                });
+
+                                if (groupGoals.length === 0) return 0;
+
+                                const completedCount = groupGoals.filter(g => completedSet.has(g.id)).length;
+                                return (completedCount / groupGoals.length) * 100;
+                            };
+
+                            // Prioritize Backend Summary (Exact Match Logic from Member Dashboard)
+                            if (data.goalSummary) {
+                                console.log("DEBUG: Using Backend Goal Summary:", data.goalSummary);
+                                if (typeof window.updateRingUI === 'function') {
+                                    window.updateRingUI(data.goalSummary);
+                                    return; // Skip frontend calculation if backend data exists
+                                }
+                            }
+
+                            // Fallback: Frontend Calculation (Fuzzy Logic)
+                            const wPct = calcGroupProgress(groups.outer);
+                            const ePct = calcGroupProgress(groups.middle);
+                            const hPct = calcGroupProgress(groups.inner);
+
+                            console.log("DEBUG: Frontend Calculated Progress:", { wPct, ePct, hPct });
+
+                            if (typeof window.updateRingUI === 'function') {
+                                window.updateRingUI({
+                                    weightProgress: wPct,
+                                    exerciseAdherence: ePct,
+                                    habitScore: hPct
+                                });
+                            }
+                        }
+
+                    }
+                } catch (err) {
+                    console.error("Error loading client goals:", err);
+                }
+            };
+
+            // Enhanced Ring UI Update Logic (Ported from Dashboard)
+            // Enhanced Ring UI Update Logic (Namespaced)
+            window.updateRingUI = (scores) => {
+                console.log("DEBUG: updateRingUI called with:", scores);
+                const { weightProgress, exerciseAdherence, habitScore } = scores;
+
+                // 1. Update Text Percentages
+                const overallScore = Math.round((weightProgress + exerciseAdherence + habitScore) / 3);
+                const mainLabel = document.getElementById('trainerMainProgressLabel');
+                if (mainLabel) mainLabel.innerText = `${overallScore}%`;
+
+                const outerText = document.getElementById('trainerOuterPctText');
+                if (outerText) outerText.innerText = `${Math.round(weightProgress)}%`;
+
+                const middleText = document.getElementById('trainerMiddlePctText');
+                if (middleText) middleText.innerText = `${Math.round(exerciseAdherence)}%`;
+
+                const innerText = document.getElementById('trainerInnerPctText');
+                if (innerText) innerText.innerText = `${Math.round(habitScore)}%`;
+
+                // 2. Update Rings (Stroke Dashoffset)
+                // Circumferences: Outer=282.7, Middle=219.9, Inner=157.1
+                const setRing = (id, pct, circ) => {
+                    // Ensure pct is within 0-100
+                    const val = Math.max(0, Math.min(100, pct || 0));
+                    const offset = circ - (val / 100) * circ;
+
+                    const rings = document.querySelectorAll('#' + id);
+                    console.log(`DEBUG: Found ${rings.length} elements for #${id}`);
+
+                    const ring = document.getElementById(id);
+                    if (ring) {
+                        const computedStyle = window.getComputedStyle(ring);
+                        console.log(`DEBUG: Before Set Ring ${id} -> Pct: ${val}, Offset: ${offset.toFixed(1)}px. Current Dashoffset: ${computedStyle.strokeDashoffset}`);
+
+                        ring.style.strokeDashoffset = offset.toFixed(1) + 'px'; // Enforce px unit
+
+                        // Force a reflow/repaint
+                        void ring.offsetWidth;
+
+                        console.log(`DEBUG: After Set Ring ${id} -> Style Dashoffset: ${ring.style.strokeDashoffset}`);
+
+                        // Color Logic
+                        if (val >= 100) ring.style.stroke = '#2ecc71'; // Green completion
+                        else ring.style.stroke = ''; // Revert to CSS default
+                    } else {
+                        console.error(`DEBUG: Ring element ${id} NOT FOUND`);
+                    }
+                };
+
+                setRing('trainerRingOuter', weightProgress, 282.7);
+                setRing('trainerRingMiddle', exerciseAdherence, 219.9);
+                setRing('trainerRingInner', habitScore, 157.1);
+
+                // 3. Update Smart Status Label
+                const statusLabel = document.getElementById('trainerSmartStatusLabel');
+                if (statusLabel) {
+                    const avg = (weightProgress + exerciseAdherence + habitScore) / 3;
+                    let text = "Off Track";
+                    let color = "#e74c3c"; // Red
+
+                    if (avg >= 85) {
+                        text = "Excellent Progress!";
+                        color = "#2ecc71"; // Green
+                    } else if (avg >= 60) {
+                        text = "Good Consistency";
+                        color = "#f1c40f"; // Yellow
+                    } else if (avg >= 30) {
+                        text = "Needs Improvement";
+                        color = "#e67e22"; // Orange
+                    }
+
+                    statusLabel.innerText = text;
+                    statusLabel.style.color = color;
+                }
+            };
+
+            const renderTrainerGoals = (goalsByCategory, completedIds) => {
+                const grid = document.getElementById('trainerDailyGoalsGrid');
+                const emptyState = document.getElementById('trainerEmptyGoalsState');
+                if (!grid) return;
+
+                if (Object.keys(goalsByCategory).length === 0) {
+                    grid.style.display = 'none';
+                    if (emptyState) emptyState.style.display = 'block';
+                    return;
+                }
+
+                grid.style.display = 'grid';
+                if (emptyState) emptyState.style.display = 'none';
+                grid.innerHTML = '';
+
+                const boxIcons = {
+                    'Workout': 'fa-dumbbell',
+                    'Meal': 'fa-utensils',
+                    'Nutrition': 'fa-apple-alt',
+                    'Hydration': 'fa-tint',
+                    'Sleep': 'fa-bed',
+                    'Habit': 'fa-check-circle'
+                };
+
+                let html = '';
+                for (const [category, goals] of Object.entries(goalsByCategory)) {
+                    goals.forEach(goal => {
+                        const isCompleted = completedIds.includes(goal.id);
+                        // Case-insensitive lookup
+                        const catKey = Object.keys(boxIcons).find(k => k.toLowerCase() === (category || '').toLowerCase());
+                        const iconClass = catKey ? boxIcons[catKey] : 'fa-star';
+
+                        html += `
+                        <div class="goal-card">
+                            <div class="goal-content-wrapper">
+                                <div class="goal-icon-circle" style="background: rgba(0, 0, 0, 0.05) !important; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000 !important; font-size: 1rem;">
+                                    <i class="fas ${iconClass}" style="color: #000 !important;"></i>
+                                </div>
+                                <div class="goal-text-wrapper" style="width: 100%;">
+                                    <h4 class="goal-title">${goal.taskDescription}</h4>
+                                    <span class="goal-category-label">${category}</span>
+                                </div>
+                            </div>
+                            <div class="goal-checkbox-wrapper">
+                                <input type="checkbox" disabled ${isCompleted ? 'checked' : ''}>
+                            </div>
+                        </div>`;
+                    });
+                }
+                grid.innerHTML = html;
+            };
+
+            // Activity Tracker State
+            let clientActivityFilter = 'daily';
+            let clientActivityDate = new Date().toISOString().split('T')[0];
+            let clientActivityChartInstance = null;
+
+            window.setClientActivityFilter = (filter) => {
+                clientActivityFilter = filter;
+                document.querySelectorAll('.filter-tab').forEach(btn => btn.classList.remove('active'));
+                document.querySelector(`button[data-filter="${filter}"]`)?.classList.add('active');
+                loadClientActivity();
+            };
+
+            // Initialize Date Picker
+            const actDatePicker = document.getElementById('clientActivityDatePicker');
+            if (actDatePicker) {
+                actDatePicker.value = clientActivityDate;
+                actDatePicker.addEventListener('change', (e) => {
+                    clientActivityDate = e.target.value;
+                    loadClientActivity();
+                });
+            }
+
+
+            window.loadClientActivity = async () => {
+                if (!selectedClientId) return;
+                const token = localStorage.getItem('token');
+
+                try {
+                    const res = await fetch(`${BASE_URL}/api/trainer/users/${selectedClientId}/activity-stats?date=${clientActivityDate}&filter=${clientActivityFilter}`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+
+                    if (res.ok) {
+                        const data = await res.json();
+                        updateClientStats(data);
+                        renderClientActivityChart(data);
+                    }
+                } catch (err) {
+                    console.error("Error loading activity:", err);
+                }
+            };
+
+            function animateClientRing(id, current, target) {
+                const ring = document.getElementById(id);
+                if (!ring) return;
+                const circum = 282.7; // r=45
+                const pct = target > 0 ? (current / target) * 100 : 0;
+                const val = Math.max(0, Math.min(100, pct));
+                const offset = circum - (val / 100) * circum;
+                ring.style.strokeDasharray = circum;
+                ring.style.strokeDashoffset = offset;
+            }
+
+            function updateClientStats(data) {
+                const stats = data.stats || (data.data ? {
+                    totalCalories: data.data.caloriesBurned,
+                    totalWater: data.data.waterLiters,
+                    averageSleep: data.data.sleepHours
+                } : {});
+
+                let cal = 0, water = 0, sleep = 0;
+                let targetCal = 2000, targetWater = 3.5, targetSleep = 8;
+                if (data.dailyTargets) {
+                    targetCal = data.dailyTargets.calories;
+                    targetWater = data.dailyTargets.water;
+                    targetSleep = data.dailyTargets.sleep;
+                }
+
+                if (data.type === 'daily') {
+                    cal = data.data.caloriesBurned || 0;
+                    water = data.data.waterLiters || 0;
+                    sleep = data.data.sleepHours || 0;
+
+                    document.getElementById('calLabel').innerText = "Calories Today";
+                    document.getElementById('waterLabel').innerText = "Liters Today";
+                    document.getElementById('sleepLabel').innerText = "Hours Today";
+
+                    document.getElementById('clientCalTarget').innerText = `Target: ${Math.round(targetCal)}`;
+                    document.getElementById('clientWaterTarget').innerText = `Target: ${targetWater.toFixed(1)}L`;
+                    document.getElementById('clientSleepTarget').innerText = `Target: ${targetSleep.toFixed(1)}h`;
+
+                } else {
+                    let multiplier = 1;
+                    if (data.range) {
+                        const start = new Date(data.range.start);
+                        const end = new Date(data.range.end);
+                        multiplier = Math.round((end - start) / (1000 * 60 * 60 * 24)) + 1;
+                    }
+
+                    cal = stats.totalCalories || (stats.averageCalories * multiplier) || 0;
+                    water = stats.totalWater || (stats.averageWater * multiplier) || 0;
+                    sleep = stats.averageSleep || 0;
+
+                    document.getElementById('calLabel').innerText = "Total Calories";
+                    document.getElementById('waterLabel').innerText = "Total Liters";
+                    document.getElementById('sleepLabel').innerText = "Avg Sleep";
+
+                    targetCal *= multiplier;
+                    targetWater *= multiplier;
+                    // targetSleep stays daily target for Average
+
+                    document.getElementById('clientCalTarget').innerText = `Total Target: ${Math.round(targetCal)}`;
+                    document.getElementById('clientWaterTarget').innerText = `Total Target: ${targetWater.toFixed(1)}L`;
+                    document.getElementById('clientSleepTarget').innerText = `Avg Target: ${targetSleep.toFixed(1)}h`;
+                }
+
+                document.getElementById('clientCalories').innerText = Math.round(cal);
+                document.getElementById('clientWater').innerText = water.toFixed(1);
+                document.getElementById('clientSleep').innerText = sleep.toFixed(1);
+
+                // Update Rings
+                animateClientRing('clientCalRing', cal, targetCal);
+                animateClientRing('clientWaterRing', water, targetWater);
+                animateClientRing('clientSleepRing', sleep, targetSleep);
+            }
+
+            function renderClientActivityChart(data) {
+                const ctx = document.getElementById('clientActivityChart').getContext('2d');
+
+                if (clientActivityChartInstance) {
+                    clientActivityChartInstance.destroy();
+                }
+
+                const history = data.type === 'daily' ? [data.data] : (data.history || []);
+                const targets = data.dailyTargets || { calories: 2000, water: 3.5, sleep: 8 };
+                const type = data.type;
+
+                const labels = history.map(day => {
+                    const date = new Date(day.date);
+                    if (type === 'daily') return 'Today';
+                    if (type === 'weekly') return date.toLocaleDateString('en-US', { weekday: 'short' });
+                    return date.getDate();
+                });
+
+                const getPct = (val, goal) => (val / (goal || 1)) * 100;
+
+                const calCapped = history.map(day => Math.min(getPct(day.caloriesBurned || 0, targets.calories), 100));
+                const waterCapped = history.map(day => Math.min(getPct(day.waterLiters || 0, targets.water), 100));
+                const sleepCapped = history.map(day => Math.min(getPct(day.sleepHours || 0, targets.sleep), 100));
+
+                clientActivityChartInstance = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Calories',
+                                data: calCapped,
+                                backgroundColor: '#FFCC00',
+                                borderRadius: 4,
+                                barPercentage: type === 'daily' ? 0.7 : 0.9,
+                                categoryPercentage: type === 'daily' ? 0.4 : 0.8,
+                                maxBarThickness: type === 'daily' ? 60 : 30
+                            },
+                            {
+                                label: 'Water',
+                                data: waterCapped,
+                                backgroundColor: '#000000',
+                                borderRadius: 4,
+                                barPercentage: type === 'daily' ? 0.7 : 0.9,
+                                categoryPercentage: type === 'daily' ? 0.4 : 0.8,
+                                maxBarThickness: type === 'daily' ? 60 : 30
+                            },
+                            {
+                                label: 'Sleep',
+                                data: sleepCapped,
+                                backgroundColor: '#808080',
+                                borderRadius: 4,
+                                barPercentage: type === 'daily' ? 0.7 : 0.9,
+                                categoryPercentage: type === 'daily' ? 0.4 : 0.8,
+                                maxBarThickness: type === 'daily' ? 60 : 30
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                                labels: { color: '#666', font: { weight: '600', size: 10, family: "'Montserrat', sans-serif" }, boxWidth: 8, padding: 10 }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function (context) {
+                                        const index = context.dataIndex;
+                                        const dsIndex = context.datasetIndex;
+                                        const day = history[index];
+                                        let label = context.dataset.label || '';
+                                        if (label) label += ': ';
+
+                                        if (dsIndex === 0) {
+                                            const pct = getPct(day.caloriesBurned || 0, targets.calories).toFixed(1);
+                                            label += `${Math.round(day.caloriesBurned || 0)} / ${Math.round(targets.calories)} kcal (${pct}%)`;
+                                        } else if (dsIndex === 1) {
+                                            const pct = getPct(day.waterLiters || 0, targets.water).toFixed(1);
+                                            label += `${(day.waterLiters || 0).toFixed(1)} / ${targets.water.toFixed(1)} L (${pct}%)`;
+                                        } else {
+                                            const pct = getPct(day.sleepHours || 0, targets.sleep).toFixed(1);
+                                            label += `${(day.sleepHours || 0).toFixed(1)} / ${targets.sleep.toFixed(1)} h (${pct}%)`;
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                ticks: { color: '#999', font: { size: 10, family: "'Montserrat', sans-serif" }, callback: function (value) { return value + '%'; } },
+                                grid: { color: 'rgba(255, 255, 255, 0.05)', drawBorder: false }
+                            },
+                            x: {
+                                ticks: { color: '#999', font: { size: 10, family: "'Montserrat', sans-serif", weight: '600' } },
+                                grid: { display: false, drawBorder: false }
+                            }
+                        }
+                    }
+                });
+            }
+
+
+            async function loadDashboardData() {
+                const token = localStorage.getItem('token');
+                try {
+                    // Update stats
+                    const statsRes = await fetch(`${BASE_URL}/api/trainer/stats`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (statsRes.ok) {
+                        const stats = await statsRes.json();
+                        document.getElementById('assignedCount').innerText = stats.totalAssignedClients || 0;
+                        document.getElementById('trainerRating').innerText = stats.averageRating ? stats.averageRating.toFixed(1) : 'N/A';
+                    }
+
+                    // Update schedules
+                    const schedulesRes = await fetch(`${BASE_URL}/api/trainer/schedules`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (schedulesRes.ok) {
+                        const schedules = await schedulesRes.json();
+                        const list = document.getElementById('scheduleList');
+                        document.getElementById('todaySessions').innerText = schedules.length;
+                        if (schedules.length === 0) {
+                            list.innerHTML = '<p class="text-muted">No sessions scheduled.</p>';
+                        } else {
+                            list.innerHTML = schedules.map(s => {
+                                const isOnline = s.type === 'ONLINE';
+                                const typeIcon = isOnline ? 'fa-video' : 'fa-dumbbell';
+                                const typeClass = isOnline ? 'online' : 'offline';
+                                const typeText = isOnline ? 'Online' : 'In-Person';
+                                const startTime = new Date(s.startTime);
+                                const dateStr = startTime.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' });
+                                const timeStr = startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                                return `
+                                    <div class="schedule-item ${typeClass}">
+                                        <div class="schedule-top-row">
+                                            <div class="schedule-info-group">
+                                                <div class="schedule-icon-circle">
+                                                    <i class="fas ${typeIcon}"></i>
+                                                </div>
+                                                <div class="schedule-text-content">
+                                                    <h4 class="schedule-client-name">${s.user ? s.user.fullname : 'BROADCAST'}</h4>
+                                                    <span class="schedule-time-sub">${dateStr} &bull; ${timeStr} &bull; ${typeText}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        ${s.notes ? `<div class="schedule-notes-small">${s.notes}</div>` : ''}
+                                        
+                                        <div class="schedule-actions-row">
+                                            ${s.meetingLink ? `<a href="${s.meetingLink}" target="_blank" class="join-link">Join</a>` : ''}
+                                            <button onclick="deleteSession('${s.id}')" class="delete-session-btn">Cancel</button>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('');
+                        }
+                    }
+
+
+
+                    // Update feedback
+                    const feedbackRes = await fetch(`${API_BASE_URL}/api/trainer/feedback`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (feedbackRes.ok) {
+                        const feedback = await feedbackRes.json();
+                        const list = document.getElementById('clientFeedback');
+                        if (feedback.length === 0) {
+                            list.innerHTML = '<p class="text-muted">No feedback received yet.</p>';
+                        } else {
+                            list.innerHTML = feedback.map(f => {
+                                const date = f.timestamp ? new Date(f.timestamp).toLocaleDateString() : 'Recent';
+                                return `
+                                    <div class="info-item" style="padding: 15px; background: rgba(255,255,255,0.8); border-radius: 8px; margin-bottom: 12px; border-left: 4px solid var(--primary); box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+                                            <div class="rating-stars" style="color: #ffc107; font-size: 1.2rem; letter-spacing: 2px;">${'&#9733;'.repeat(f.rating)}${'&#9734;'.repeat(5 - f.rating)}</div>
+                                            <span style="font-size: 0.8rem; color: #555; background: rgba(0,0,0,0.05); padding: 3px 8px; border-radius: 4px;">${date}</span>
+                                        </div>
+                                        <div style="margin-bottom: 6px;">
+                                            <span class="title" style="font-weight: 700; color: #000; font-size: 1.15rem;">${f.user?.fullname || 'Member'}</span>
+                                        </div>
+                                        <div style="font-style: italic; color: #111; font-size: 1.05rem; line-height: 1.5;">
+                                            "${f.comment || 'No comment provided'}"
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('');
+                        }
+                    }
+
+                } catch (err) {
+                    console.error('Error loading dashboard data:', err);
+                }
+            }
+
+            let allClients = [];
+
+            async function loadClients() {
+                const token = localStorage.getItem('token');
+                try {
+                    const response = await fetch(`${BASE_URL}/api/trainer/assigned-users`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (response.ok) {
+                        const clients = await response.json();
+                        allClients = clients; // Store globally for filtering
+                        renderClientList('clientsList', clients, "selectClient");
+                        renderClientList('goalPlanMembersList', clients, "selectGoalMember");
+                    }
+                } catch (err) {
+                    console.error('Error loading clients:', err);
+                }
+            }
+
+            function renderClientList(elementId, clients, selectionHandlerName) {
+                const list = document.getElementById(elementId);
+                if (!list) return;
+                if (clients.length === 0) {
+                    list.innerHTML = '<p class="text-muted">No clients assigned yet.</p>';
+                    return;
+                }
+                list.innerHTML = clients.map(c => {
+                    const goalsArr = Array.isArray(c.fitnessGoals) ? c.fitnessGoals : (c.fitnessGoals ? [c.fitnessGoals] : []);
+                    const displayGoal = goalsArr.length > 0 ? goalsArr.join(', ') : (c.primaryGoal || 'Fitness');
+                    const goalString = (goalsArr.join(', ') || c.primaryGoal || 'N/A').replace(/'/g, "\\'");
+                    const safeFullname = c.fullname.replace(/'/g, "\\'");
+
+                    const statusText = c.isDailyActive ? 'ACTIVE' : 'IDLE';
+                    const statusClass = c.isDailyActive ? 'status-active' : 'status-idle';
+                    const indicatorClass = c.isDailyActive ? 'online' : 'away';
+
+                    const clientDataEncoded = encodeURIComponent(JSON.stringify(c));
+                    return `
+                        <div class="client-item" onclick="window.${selectionHandlerName}('${c.id}', '${safeFullname}', '${goalString}', '${clientDataEncoded}')">
+                            <div class="client-avatar-wrapper">
+                                <div class="client-avatar">${c.fullname[0]}</div>
+                                <span class="status-indicator ${indicatorClass}"></span>
+                            </div>
+                            <div class="client-meta">
+                                <div class="client-name-row">
+                                    <span class="name">${c.fullname}</span>
+                                    <span class="client-status ${statusClass}">${statusText}</span>
+                                </div>
+                                <span class="goal"><i class="fas fa-bullseye"></i> ${displayGoal}</span>
+                            </div>
+                            <i class="fas fa-chevron-right arrow-icon"></i>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            window.filterClients = () => {
+                const query = document.getElementById('clientSearchInput').value.toLowerCase();
+                const filtered = allClients.filter(c =>
+                    c.fullname.toLowerCase().includes(query)
+                );
+                renderClientList('clientsList', filtered, "selectClient");
+            };
+
+            window.selectClient = (id, name, goals, clientDataEncoded) => {
+                selectedClientId = id;
+                localStorage.setItem('selectedClientId', id); // Persist for goal planner
+                document.getElementById('noClientSelected').style.display = 'none';
+                document.getElementById('clientDetailView').style.display = 'block';
+                document.getElementById('clientName').innerText = name;
+                document.getElementById('clientGoals').innerText = 'Goals: ' + goals;
+
+                // Populate Client Details Tab
+                if (clientDataEncoded) {
+                    try {
+                        const clientData = JSON.parse(decodeURIComponent(clientDataEncoded));
+                        document.getElementById('detailClientEmail').innerText = clientData.email || '-';
+                        document.getElementById('detailClientAge').innerText = clientData.age ? clientData.age + ' yrs' : '-';
+                        document.getElementById('detailClientWeight').innerText = clientData.weight ? clientData.weight + ' kg' : '-';
+                        document.getElementById('detailClientHeight').innerText = clientData.height ? clientData.height + ' cm' : '-';
+
+                        const goalsArr = Array.isArray(clientData.fitnessGoals) ? clientData.fitnessGoals : (clientData.fitnessGoals ? [clientData.fitnessGoals] : []);
+                        const goalString = (goalsArr.join(', ') || clientData.primaryGoal || 'N/A');
+                        document.getElementById('detailClientGoals').innerText = goalString;
+                    } catch (e) {
+                        console.error("Failed to parse client data", e);
+                    }
+                }
+
+                loadClientMedicalReports(id);
+
+                highlightSelectedItem('clientsList', name);
+                loadClientProgress();
+                loadMemberMessages();
+                startPolling();
+
+                // Switch to details tab by default when a client is selected
+                switchTrainerTab('details');
+            };
+
+            async function loadClientMedicalReports(userId) {
+                const reportsContainer = document.getElementById('detailClientMedicalReports');
+                reportsContainer.innerHTML = '<p class="text-muted">Loading medical reports...</p>';
+                try {
+                    const res = await fetch(`${BASE_URL}/api/trainer/users/${userId}/medical-reports`, {
+                        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                    });
+                    if (res.ok) {
+                        const reports = await res.json();
+                        if (!reports || reports.length === 0) {
+                            reportsContainer.innerHTML = '<p class="text-muted">No medical reports found.</p>';
+                        } else {
+                            reportsContainer.innerHTML = reports.map(report => `
+                                <div class="info-item" style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background: rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.05); border-radius: 8px; margin-bottom: 10px;">
+                                    <div>
+                                        <h4 style="margin: 0 0 5px 0; font-size: 1rem; color: #333;"><i class="fas fa-file-pdf" style="color: #e74c3c; margin-right: 8px;"></i>${report.reportName || 'Medical Report'}</h4>
+                                        <p style="margin: 0; font-size: 0.85rem; color: #777;">Uploaded: ${new Date(report.uploadedAt).toLocaleDateString()}</p>
+                                    </div>
+                                    <div style="display: flex; gap: 8px;">
+                                        <a href="${report.reportUrl}" target="_blank" class="btn btn-outline-primary btn-sm" style="border-radius: 50px; padding: 5px 15px; font-size: 0.85rem; border: 1px solid var(--primary); color: var(--primary);"><i class="fas fa-eye"></i> View</a>
+                                        <a href="${report.reportUrl}" download class="btn btn-primary btn-sm" style="border-radius: 50px; padding: 5px 15px; font-size: 0.85rem; color: #000;"><i class="fas fa-download"></i> Download</a>
+                                    </div>
+                                </div>
+                            `).join('');
+                        }
+                    } else {
+                        reportsContainer.innerHTML = '<p class="text-muted">Failed to load reports.</p>';
+                    }
+                } catch (err) {
+                    console.error('Error loading medical reports:', err);
+                    reportsContainer.innerHTML = '<p class="text-muted">Error loading medical reports.</p>';
+                }
+            }
+
+
+            window.switchGoalMemberTab = (tab, btn) => {
+                document.querySelectorAll('.sub-tabs-wrapper .sub-tab').forEach(b => b.classList.remove('active'));
+                if (btn) btn.classList.add('active');
+
+                const activeContent = document.getElementById('activeGoalsSection');
+                const historyContent = document.getElementById('completedPlansSection');
+
+                if (activeContent) activeContent.style.display = tab === 'current' ? 'block' : 'none';
+                if (historyContent) historyContent.style.display = tab === 'history' ? 'block' : 'none';
+
+                if (tab === 'history' && selectedClientId) {
+                    loadCompletedPlansHistory(selectedClientId);
+                }
+            };
+
+            window.selectGoalMember = (id, name, goals) => {
+                selectedClientId = id;
+                localStorage.setItem('selectedClientId', id); // Persist for goal planner
+                document.getElementById('noGoalMemberSelected').style.display = 'none';
+                document.getElementById('goalMemberDetailView').style.display = 'block';
+                document.getElementById('goalMemberName').innerText = name;
+                document.getElementById('selectedMemberId').value = id;
+
+                highlightSelectedItem('goalPlanMembersList', name);
+
+                // Reset to Current Plan tab on new member selection
+                const currentTabBtn = document.querySelector('.sub-tabs-wrapper .sub-tab');
+                if (currentTabBtn) switchGoalMemberTab('current', currentTabBtn);
+
+                loadMemberGoalPlan();
+                loadCompletedPlansHistory(id);
+            };
+
+            function highlightSelectedItem(listId, name) {
+                document.querySelectorAll(`#${listId} .client-item`).forEach(item => {
+                    item.classList.remove('active');
+                    if (item.querySelector('.name').innerText === name) item.classList.add('active');
+                });
+            }
+
+            async function loadMemberGoalPlan() {
+                if (!selectedClientId) return;
+                const token = localStorage.getItem('token');
+                const listEl = document.getElementById('goalPlanList');
+                try {
+                    const res = await fetch(`${BASE_URL}/api/trainer/members/${selectedClientId}/goals`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (res.ok) {
+                        const goals = await res.json();
+                        if (goals.length === 0) {
+                            listEl.innerHTML = '<p class="text-muted" style="grid-column: 1 / -1; text-align: center;">No goals assigned yet.</p>';
+                        } else {
+                            // Extract date range from first goal if available
+                            const firstGoal = goals[0];
+                            let dateRangeHtml = '';
+                            if (firstGoal.startDate && firstGoal.endDate) {
+                                const start = new Date(firstGoal.startDate).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' });
+                                const end = new Date(firstGoal.endDate).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' });
+                                dateRangeHtml = `<div style="grid-column: 1 / -1; margin-bottom: 20px; padding: 15px; background: rgba(232, 255, 0, 0.05); border-radius: 10px; border: 1px dashed var(--primary); color: #ccc; font-size: 0.9rem; display: flex; align-items: center; gap: 10px;">
+                                    <i class="fas fa-calendar-alt" style="color: var(--primary);"></i>
+                                    <span>Plan Duration: <strong>${start}</strong> &mdash; <strong>${end}</strong></span>
+                                </div>`;
+                            }
+
+                            const boxIcons = {
+                                'Workout': 'fa-dumbbell',
+                                'Meal': 'fa-utensils',
+                                'Nutrition': 'fa-apple-alt',
+                                'Hydration': 'fa-tint',
+                                'Sleep': 'fa-bed',
+                                'Habit': 'fa-check-circle'
+                            };
+
+                            listEl.innerHTML = dateRangeHtml + goals.map(g => {
+                                // Case-insensitive lookup
+                                const catKey = Object.keys(boxIcons).find(k => k.toLowerCase() === (g.category || '').toLowerCase());
+                                const iconClass = catKey ? boxIcons[catKey] : 'fa-star';
+                                const frequencyLabel = g.frequency ? `<span style="font-size: 0.75rem; color: #888; background: #222; padding: 2px 6px; border-radius: 4px; margin-top: 5px; display: inline-block;">${g.frequency}</span>` : '';
+
+                                return `
+                                <div class="goal-card" style="margin-bottom: 0; position: relative;">
+                                    <div class="goal-content-wrapper">
+                                        <div class="goal-icon-circle" style="background: rgba(0, 0, 0, 0.05) !important; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000 !important; font-size: 1rem;">
+                                            <i class="fas ${iconClass}" style="color: #000 !important;"></i>
+                                        </div>
+                                        <div class="goal-text-wrapper" style="width: 100%;">
+                                            <div style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%;">
+                                                <h4 class="goal-title" style="margin: 0; font-size: 1rem; color: var(--dark);">${g.taskDescription}</h4>
+                                                
+                                            </div>
+                                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 5px;">
+                                                 <span class="goal-category-label" style="font-size: 0.75rem; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">${g.category}</span>
+                                                 ${frequencyLabel}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button onclick="deleteTrainerGoal('${g.id}')" style="position: absolute; top: 10px; right: 10px; background: none; border: none; color: #ff5555; opacity: 0; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0" class="delete-goal-btn">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                    <style>
+                                        .goal-card:hover .delete-goal-btn { opacity: 0.5 !important; }
+                                        .goal-card:hover .delete-goal-btn:hover { opacity: 1 !important; }
+                                    </style>
+                                </div>
+                            `}).join('');
+                        }
+                    }
+                } catch (err) {
+                    console.error('Error loading goal plan:', err);
+                }
+            }
+
+            async function loadCompletedPlansHistory(memberId) {
+                const token = localStorage.getItem('token');
+                const listEl = document.getElementById('completedPlansList');
+                if (!listEl) return;
+
+                try {
+                    const res = await fetch(`${BASE_URL}/api/trainer/members/${memberId}/goal-history`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (res.ok) {
+                        const history = await res.json();
+                        if (!history || history.length === 0) {
+                            listEl.innerHTML = `
+                                <div class="history-empty-state-lux">
+                                    <i class="fas fa-history"></i>
+                                    <h3>No Archive Yet</h3>
+                                    <p>This member hasn''t completed any training plans in the system. Once they finish a plan, their full success record will appear here.</p>
+                                </div>`;
+                        } else {
+                            // Group by startDate and endDate to represent a single "Plan"
+                            const groupedPlans = history.reduce((acc, goal) => {
+                                const key = `${goal.startDate}_${goal.endDate}`;
+                                if (!acc[key]) {
+                                    acc[key] = {
+                                        startDate: goal.startDate,
+                                        endDate: goal.endDate,
+                                        tasks: [],
+                                        allGoalIds: [],
+                                        planRating: goal.planRating,
+                                        planReview: goal.planReview
+                                    };
+                                }
+                                acc[key].tasks.push(goal.taskDescription);
+                                acc[key].allGoalIds.push(goal.id);
+                                // If any goal in the group has a rating/review, use it
+                                if (goal.planRating && !acc[key].planRating) acc[key].planRating = goal.planRating;
+                                if (goal.planReview && !acc[key].planReview) acc[key].planReview = goal.planReview;
+                                return acc;
+                            }, {});
+
+                            listEl.innerHTML = Object.values(groupedPlans).map(plan => {
+                                let dateRangeText = "Custom Training Plan";
+                                if (plan.startDate && plan.endDate) {
+                                    const start = new Date(plan.startDate).toLocaleDateString();
+                                    const end = new Date(plan.endDate).toLocaleDateString();
+                                    dateRangeText = `${start} - ${end}`;
+                                }
+                                const ratingHtml = plan.planRating ?
+                                    `<div style="color: #ffd700; font-size: 1.2rem; filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.3));">
+                                        ${'★'.repeat(plan.planRating)}${'☆'.repeat(5 - plan.planRating)}
+                                    </div>` :
+                                    '<span style="color: #888; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Pending Member Review</span>';
+
+                                const taskListHtml = plan.tasks.map(t => `
+                                    <div class="task-item-lux" style="color: #000; font-weight: 600;">
+                                        <i class="fas fa-check-double" style="color: #000;"></i>
+                                        <span>${t}</span>
+                                    </div>`).join('');
+
+                                return `
+                                    <div class="premium-history-card">
+                                        <button class="delete-plan-btn" onclick="deleteHistoryPlan('${plan.allGoalIds.join(',')}')" title="Delete from History">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 20px; margin-bottom: 20px;">
+                                            <div>
+                                                <div style="display: flex; align-items: center; gap: 15px;">
+                                                    <h4 style="margin: 0; font-size: 1.4rem; font-weight: 800; color: #000;">Completed Training Plan</h4>
+                                                    <div class="plan-success-badge" style="color: #000; border-color: #000;">
+                                                        <i class="fas fa-check-circle" style="color: #000;"></i> Success
+                                                    </div>
+                                                </div>
+                                                <p style="margin: 8px 0 0; font-size: 1rem; font-weight: 700; color: #000;">
+                                                    <i class="far fa-calendar-alt" style="margin-right: 5px; color: #000;"></i> ${dateRangeText}
+                                                </p>
+                                            </div>
+                                            <div style="text-align: right; padding-right: 45px;">
+                                                ${ratingHtml}
+                                            </div>
+                                        </div>
+                                        
+                                        <div style="margin: 15px 0;">
+                                            <p style="font-size: 0.75rem; color: var(--primary); text-transform: uppercase; margin-bottom: 15px; font-weight: 800; letter-spacing: 1px; opacity: 0.8;">Modules Delivered:</p>
+                                            <div class="task-grid-lux">
+                                                ${taskListHtml}
+                                            </div>
+                                        </div>
+
+                                        ${plan.planReview ? `
+                                            <div class="review-quote-block" style="color: #000;">
+                                                <p style="font-size: 0.75rem; color: #000; text-transform: uppercase; margin-bottom: 8px; font-weight: 900; letter-spacing: 1px;">Member Feedback</p>
+                                                <p style="color: #000; font-weight: 600;">"${plan.planReview}"</p>
+                                            </div>
+                                        ` : ''}
+                                    </div>
+                                `;
+                            }).join('');
+                        }
+                    }
+                } catch (err) {
+                    console.error('Error loading member history:', err);
+                }
+            }
+
+            window.deleteHistoryPlan = async (goalIdsString) => {
+                if (!confirm('Are you sure you want to delete this plan and all associated records? This action cannot be undone.')) {
+                    return;
+                }
+
+                const token = localStorage.getItem('token');
+                const goalIds = goalIdsString.split(',');
+                try {
+                    const res = await fetch(`${BASE_URL}/api/goals/bulk-delete`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(goalIds)
+                    });
+
+                    if (res.ok) {
+                        alert('Plan deleted successfully');
+                        // Refresh the current member's history
+                        const memberId = document.getElementById('selectedMemberId').value;
+                        if (memberId) loadCompletedPlansHistory(memberId);
+                    } else {
+                        alert('Failed to delete plan');
+                    }
+                } catch (err) {
+                    console.error('Error deleting plan:', err);
+                    alert('An error occurred during deletion');
+                }
+            };
+
+            async function loadMemberMessages() {
+                if (!selectedClientId) return;
+                const token = localStorage.getItem('token');
+                const historyEl = document.getElementById('messageHistory');
+                try {
+                    const res = await fetch(`${BASE_URL}/api/trainer/messages/members/${selectedClientId}`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (res.ok) {
+                        const messages = await res.json();
+                        if (messages.length === 0) {
+                            historyEl.innerHTML = `
+                                <div class="empty-chat" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: #888; opacity: 0.6; gap: 10px; padding: 40px 0;">
+                                    <i class="far fa-comments" style="font-size: 3rem;"></i>
+                                    <p>No messages yet.</p>
+                                    <small>Start the conversation!</small>
+                                </div>`;
+                        } else {
+                            historyEl.innerHTML = messages.map(m => {
+                                const isTrainer = m.senderType === 'TRAINER' || !m.senderType; // Fallback for old data
+                                const date = new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                                let deleteButton = '';
+                                if (isTrainer) {
+                                    deleteButton = `
+                                        <button class="delete-msg-btn" onclick="deleteMessage('${m.id}', event)" title="Delete Message" style="background: none; border: none; color: #ff5555; cursor: pointer; opacity: 0.5; transition: opacity 0.2s; font-size: 0.8rem; margin: 0 5px;">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    `;
+                                }
+
+                                return `
+                                    <div class="message-wrapper ${isTrainer ? 'sent' : 'received'}" style="display: flex; flex-direction: column; align-items: ${isTrainer ? 'flex-end' : 'flex-start'}; margin-bottom: 15px; width: 100%;">
+                                        <div style="display: flex; align-items: center; flex-direction: ${isTrainer ? 'row' : 'row-reverse'};">
+                                            ${isTrainer ? deleteButton : ''}
+                                            <div class="message-bubble" style="background: ${isTrainer ? 'var(--primary)' : 'rgba(255,255,255,0.05)'}; color: ${isTrainer ? 'var(--dark)' : '#eee'}; padding: 10px 15px; border-radius: ${isTrainer ? '15px 15px 0 15px' : '15px 15px 15px 0'}; font-size: 0.95rem; max-width: 85%; box-shadow: 0 2px 5px rgba(0,0,0,0.1); line-height: 1.4;">
+                                                ${m.content}
+                                            </div>
+                                        </div>
+                                        <div class="message-meta" style="font-size: 0.7rem; color: #666; margin-top: 4px; font-weight: 600;">${date}</div>
+                                    </div>
+                                `;
+                            }).join('');
+                        }
+                        historyEl.scrollTop = historyEl.scrollHeight;
+                    }
+                } catch (err) {
+                    console.error('Error loading messages:', err);
+                }
+            }
+
+            window.deleteMessage = async (id, event) => {
+                if (event) event.stopPropagation();
+                if (!confirm('Delete this message?')) return;
+                const token = localStorage.getItem('token');
+                try {
+                    const res = await fetch(`${BASE_URL}/api/trainer/messages/${id}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (res.ok) {
+                        loadMemberMessages();
+                    } else {
+                        alert("Failed to delete message");
+                    }
+                } catch (err) {
+                    console.error("Error deleting message", err);
+                }
+            };
+
+            window.sendDirectMessage = async () => {
+                const input = document.getElementById('memberMessageInput');
+                const content = input.value.trim();
+                if (!content || !selectedClientId) return;
+                const token = localStorage.getItem('token');
+
+                try {
+                    const res = await fetch(`${BASE_URL}/api/trainer/messages`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            member: { id: selectedClientId },
+                            content: content,
+                            senderType: 'TRAINER'
+                        })
+                    });
+                    if (res.ok) {
+                        input.value = '';
+                        loadMemberMessages();
+                    }
+                } catch (err) {
+                    console.error('Error sending message:', err);
+                }
+            };
+
+            window.openScheduleModal = async () => {
+                document.getElementById('scheduleModal').style.display = 'flex';
+                // Populate members dropdown
+                const token = localStorage.getItem('token');
+                try {
+                    const response = await fetch(`${BASE_URL}/api/trainer/assigned-users`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (response.ok) {
+                        const clients = await response.json();
+                        const select = document.getElementById('scheduleMember');
+                        select.innerHTML = '<option value="broadcast">Broadcast to All Clients</option>' +
+                            clients.map(c => `<option value="${c.id}">${c.fullname}</option>`).join('');
+                    }
+                } catch (err) {
+                    console.error('Error loading clients for modal:', err);
+                }
+            };
+
+            window.closeScheduleModal = () => {
+                document.getElementById('scheduleModal').style.display = 'none';
+            };
+
+            window.toggleLinkField = () => {
+                const type = document.getElementById('sessionType').value;
+                document.getElementById('linkField').style.display = type === 'ONLINE' ? 'block' : 'none';
+            };
+
+            window.handleScheduleSubmit = async (e) => {
+                e.preventDefault();
+                const memberId = document.getElementById('scheduleMember').value;
+                const scheduleData = {
+                    user: memberId === 'broadcast' ? null : { id: memberId },
+                    startTime: document.getElementById('startTime').value,
+                    endTime: document.getElementById('endTime').value,
+                    type: document.getElementById('sessionType').value,
+                    meetingLink: document.getElementById('meetingLink').value,
+                    notes: document.getElementById('sessionNotes').value
+                };
+
+                const token = localStorage.getItem('token');
+                try {
+                    const res = await fetch(`${BASE_URL}/api/trainer/schedules`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(scheduleData)
+                    });
+                    if (res.ok) {
+                        closeScheduleModal();
+                        loadDashboardData();
+                    }
+                } catch (err) {
+                    console.error('Error creating schedule:', err);
+                }
+            };
+
+            // Helper Functions for Goal Progress Rings (Synced with Member Dashboard)
+            const updateRing = (id, pct, circum) => {
+                const el = document.getElementById(id);
+                if (el) {
+                    const val = Math.max(0, Math.min(100, pct || 0));
+                    const offset = circum - (val / 100) * circum;
+                    el.style.strokeDasharray = circum;
+                    el.style.strokeDashoffset = offset;
+                }
+            };
+
+            const getSmartStatus = (pct) => {
+                if (pct >= 90) return { text: "ðŸ† Elite Performance", color: "var(--success)" };
+                if (pct >= 70) return { text: "ðŸ”¥ On Track", color: "#00d2ff" };
+                if (pct >= 50) return { text: "âš ï¸ Improving", color: "#ffcc00" };
+                return { text: "ðŸ“‰ Needs Focus", color: "#ff5555" };
+            };
+
+            const updateClientProgressRings = (goalSummary) => {
+                if (!goalSummary) return;
+
+                // 1. Calculate Ring Percentages directly from summarized data
+                const outerPct = goalSummary.weightProgress || 0;
+                const middlePct = goalSummary.exerciseAdherence || 0;
+                const innerPct = goalSummary.habitScore || 0;
+
+                // 2. Update Rings
+                // Circumferences: Outer (r=45): 282.7, Middle (r=35): 219.9, Inner (r=25): 157.1
+                updateRing('ringOuter', outerPct, 282.7);
+                updateRing('ringMiddle', middlePct, 219.9);
+                updateRing('ringInner', innerPct, 157.1);
+
+                // 3. Update Text Legend
+                const outerText = document.getElementById('outerPctText');
+                const middleText = document.getElementById('middlePctText');
+                const innerText = document.getElementById('innerPctText');
+
+                if (outerText) outerText.innerText = Math.round(outerPct) + '%';
+                if (middleText) middleText.innerText = Math.round(middlePct) + '%';
+                if (innerText) innerText.innerText = Math.round(innerPct) + '%';
+
+                // 4. Update Main Center Label & Smart Status
+                const overallScore = Math.round((outerPct + middlePct + innerPct) / 3);
+
+                const mainLabel = document.getElementById('mainProgressLabel');
+                if (mainLabel) mainLabel.innerText = overallScore + '%';
+
+                const smartStatus = document.getElementById('smartStatusLabel');
+                if (smartStatus) {
+                    const status = getSmartStatus(overallScore);
+                    smartStatus.innerText = status.text;
+                    smartStatus.style.borderColor = status.color;
+                    smartStatus.style.color = '#fff';
+                    smartStatus.style.boxShadow = `0 0 15px ${status.color}33`; // 20% alpha
+                }
+            };
+
+            // --- Date & Calendar Logic ---
+            let currentViewDate = new Date();
+            let currentClientCalendarData = null;
+
+            function updateDateNavigator() {
+                const dateLabel = document.getElementById('currentDateLabel');
+                if (dateLabel) {
+                    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                    dateLabel.textContent = currentViewDate.toLocaleDateString('en-US', options);
+                }
+            }
+
+            async function fetchClientCalendar(clientId) {
+                const token = localStorage.getItem('token');
+                try {
+                    const res = await fetch(`${BASE_URL}/api/trainer/users/${clientId}/goal-completion-calendar`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (res.ok) {
+                        currentClientCalendarData = await res.json();
+                        renderClientCalendar();
+                    }
+                } catch (error) {
+                    console.error("Error fetching calendar:", error);
+                }
+            }
+
+            function renderClientCalendar() {
+                const calendarEl = document.getElementById('goalCalendar');
+                if (!calendarEl || !currentClientCalendarData) return;
+                if (!currentClientCalendarData.hasActivePlan) {
+                    calendarEl.innerHTML = '<div style="padding:15px; text-align:center; color:#888;">No active goal plan found.</div>';
+                    return;
+                }
+
+                calendarEl.innerHTML = '';
+
+                const startDate = new Date(currentClientCalendarData.startDate);
+                const endDate = new Date(currentClientCalendarData.endDate);
+                const completions = currentClientCalendarData.completions || {};
+
+                const header = document.createElement('div');
+                header.innerText = "Goal Completion History";
+                header.style.cssText = "font-weight: bold; margin-bottom: 15px; text-align: center; color: var(--primary); border-bottom: 1px solid #eee; padding-bottom: 10px;";
+                calendarEl.appendChild(header);
+
+                const grid = document.createElement('div');
+                grid.style.cssText = "display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px;";
+
+                // Iterate day by day from startDate to endDate
+                let loopDate = new Date(startDate);
+                let loops = 0;
+                while (loopDate <= endDate && loops < 366) {
+                    const dateStr = loopDate.toISOString().split('T')[0];
+                    const isCompleted = completions[dateStr];
+                    const dayNum = loopDate.getDate();
+
+                    const dayEl = document.createElement('div');
+                    dayEl.innerText = dayNum;
+
+                    let bg = 'white';
+                    let color = '#333';
+                    let border = '1px solid #eee';
+
+                    if (isCompleted) {
+                        bg = 'var(--success)';
+                        color = 'white';
+                        border = '1px solid var(--success)';
+                    } else {
+                        bg = '#f9f9f9';
+                        color = '#aaa';
+                    }
+
+                    const currentIso = currentViewDate.toISOString().split('T')[0];
+                    if (dateStr === currentIso) {
+                        border = '2px solid var(--primary)';
+                        if (!isCompleted) color = 'var(--primary)';
+                    }
+
+                    dayEl.style.cssText = `background-color: ${bg}; color: ${color}; border: ${border}; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%; cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: all 0.2s ease;`;
+
+                    (function (dStr) {
+                        dayEl.onclick = () => {
+                            currentViewDate = new Date(dStr);
+                            updateDateNavigator();
+                            loadClientProgress();
+                            document.getElementById('goalCalendar').classList.remove('show');
+                            renderClientCalendar();
+                        };
+                    })(dateStr);
+
+                    grid.appendChild(dayEl);
+                    loopDate.setDate(loopDate.getDate() + 1);
+                    loops++;
+                }
+                calendarEl.appendChild(grid);
+            }
+
+            function initDateNavigatorEvents() {
+                const prevBtn = document.getElementById('prevDayBtn');
+                const nextBtn = document.getElementById('nextDayBtn');
+                const toggleBtn = document.getElementById('calendarToggleBtn');
+
+                if (prevBtn) prevBtn.onclick = () => {
+                    currentViewDate.setDate(currentViewDate.getDate() - 1);
+                    updateDateNavigator();
+                    loadClientProgress();
+                };
+                if (nextBtn) nextBtn.onclick = () => {
+                    currentViewDate.setDate(currentViewDate.getDate() + 1);
+                    updateDateNavigator();
+                    loadClientProgress();
+                };
+                if (toggleBtn) toggleBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    const cal = document.getElementById('goalCalendar');
+                    if (cal) cal.classList.toggle('show');
+                };
+                document.addEventListener('click', (e) => {
+                    if (!e.target.closest('.calendar-dropdown-wrapper')) {
+                        const cal = document.getElementById('goalCalendar');
+                        if (cal) cal.classList.remove('show');
+                    }
+                });
+                updateDateNavigator();
+            }
+
+            // Init events when script runs (deferred)
+            setTimeout(initDateNavigatorEvents, 500);
+
+            async function loadClientProgress() {
+                // Use currentViewDate instead of date input
+                const dateStr = currentViewDate.toISOString().split('T')[0];
+                const token = localStorage.getItem('token');
+
+                if (!selectedClientId) return;
+
+                try {
+                    // Fetch and render data
+                    const progressRes = await fetch(`${BASE_URL}/api/trainer/users/${selectedClientId}/progress?date=${dateStr}`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+
+                    if (progressRes.ok) {
+                        const data = await progressRes.json();
+
+                        // Render Daily Goals (Read-Only)
+                        if (data.goals && window.renderGoalsForDate) {
+                            const goalsWithCompletion = data.goals.map(g => ({
+                                ...g,
+                                completed: data.completedGoalIds ? data.completedGoalIds.includes(g.id) : false
+                            }));
+                            window.renderGoalsForDate(goalsWithCompletion, dateStr, 'trainerDailyGoalsGrid', true); // Pass dateStr
+                        } else {
+                            document.getElementById('trainerDailyGoalsGrid').innerHTML = '<p class="text-muted text-center">Modules not loaded yet.</p>';
+                        }
+
+                        // Update Goal Progress Rings using the same goalSummary logic as member dashboard
+                        if (data.goalSummary) {
+                            updateClientProgressRings(data.goalSummary);
+                        }
+                    }
+
+                    // Also refresh calendar
+                    fetchClientCalendar(selectedClientId);
+
+                } catch (err) {
+                    console.error('Error loading progress:', err);
+                }
+            }
+
+
+
+            window.deleteSession = async (id) => {
+                if (!confirm('Are you sure you want to delete this session?')) return;
+                const token = localStorage.getItem('token');
+                try {
+                    const res = await fetch(`${BASE_URL}/api/trainer/schedules/${id}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (res.ok) {
+                        loadDashboardData();
+                    } else {
+                        alert('Could not delete session.');
+                    }
+                } catch (err) {
+                    console.error('Delete error:', err);
+                }
+            };
+
+            // Goal modal logic removed - logic moved to assign-goals.html
+
+            window.deleteTrainerGoal = async (goalId) => {
+                if (!confirm('Are you sure you want to delete this goal?')) return;
+                const token = localStorage.getItem('token');
+                try {
+                    const res = await fetch(`${BASE_URL}/api/trainer/goals/${goalId}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (res.ok) {
+                        loadClientProgress();
+                        loadMemberGoalPlan(); // Refresh the Goal Plan tab list as well
+                    }
+                } catch (err) {
+                    console.error('Error deleting goal:', err);
+                }
+            };
+
+            loadDashboardData();
+            loadClients();
+        });
+    </script>
+    <style>
+        /* Dashboard Enhancements */
+        .stats-overview-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 25px;
+        }
+
+        .stat-card i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            opacity: 0.8;
+        }
+
+        .stat-content h3 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 5px;
+        }
+
+        .stat-content p {
+            color: #888;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .dashboard-tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            border-bottom: 1px solid #222;
+            padding-bottom: 15px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: #888;
+            font-family: inherit;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .tab-btn:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .tab-btn.active {
+            color: var(--dark);
+            background: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .overview-section {
+            padding: 25px;
+            height: 100%;
+            min-height: 350px;
+        }
+
+        .section-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #222;
+            padding-bottom: 10px;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            /* Custom width for Trainer Dashboard */
+        }
+
+        .trainer-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            /* Reduced sidebar width */
+            gap: 25px;
+            margin-top: 0;
+        }
+
+        .clients-sidebar {
+            padding: 20px;
+            height: auto;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .clients-list {
+            margin-top: 15px;
+        }
+
+        .client-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .client-item:hover {
+            background: rgba(232, 255, 0, 0.05);
+            border-color: rgba(232, 255, 0, 0.3);
+            transform: translateX(5px);
+        }
+
+        /* Goal Planner Professional Enhancements */
+        .checklist-modal {
+            background: rgba(18, 18, 18, 0.95) !important;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(232, 255, 0, 0.15);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .goal-rec-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 12px 16px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.2s ease;
+        }
+
+        .goal-rec-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(232, 255, 0, 0.2);
+        }
+
+        .category-badge {
+            font-size: 0.65rem;
+            color: var(--primary);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: rgba(232, 255, 0, 0.1);
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-bottom: 4px;
+            display: inline-block;
+        }
+
+        .preview-goal-item {
+            font-size: 0.85rem;
+            background: rgba(232, 255, 0, 0.03);
+            padding: 10px 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+            color: #ccc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .remove-goal-btn {
+            background: rgba(255, 85, 85, 0.1);
+            color: #ff5555;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .remove-goal-btn:hover {
+            background: #ff5555;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        #goalForm select,
+        #goalForm input,
+        #goalForm textarea {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.2s ease;
+        }
+
+        #goalForm select:focus,
+        #goalForm input:focus,
+        #goalForm textarea:focus {
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.06);
+            box-shadow: 0 0 0 2px rgba(232, 255, 0, 0.1);
+        }
+
+        .client-item.active {
+            background: rgba(232, 255, 0, 0.1);
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(232, 255, 0, 0.1);
+        }
+
+        .client-avatar-wrapper {
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .client-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary), #b8cc00);
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.4rem;
+            box-shadow: 0 4px 10px rgba(232, 255, 0, 0.2);
+        }
+
+        .status-indicator {
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid #000;
+        }
+
+        .status-indicator.online {
+            background: #4CAF50;
+        }
+
+        .status-indicator.away {
+            background: #FFC107;
+        }
+
+        .client-meta {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .client-name-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .client-meta .name {
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: black;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 140px;
+        }
+
+        .client-status {
+            font-size: 0.6rem;
+            font-weight: 800;
+            padding: 2px 6px;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        .client-status.status-active {
+            background: rgba(76, 175, 80, 0.15);
+            color: #2E7D32;
+        }
+
+        .client-status.status-idle {
+            background: rgba(255, 193, 7, 0.15);
+            color: #FF8F00;
+        }
+
+        .client-meta .goal {
+            font-size: 0.8rem;
+            color: #444;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .client-meta .goal i {
+            font-size: 0.7rem;
+            color: var(--primary);
+        }
+
+        .arrow-icon {
+            color: #444;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+        }
+
+        .client-item:hover .arrow-icon {
+            color: var(--primary);
+            transform: translateX(3px);
+        }
+
+        .client-progress {
+            padding: 30px;
+            min-height: 500px;
+        }
+
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 20px;
+        }
+
+        .date-selector {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .date-selector input {
+            padding: 8px;
+            border-radius: 5px;
+            background: #111;
+            color: white;
+            border: 1px solid #333;
+        }
+
+        .progress-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .progress-section {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #222;
+        }
+
+        .progress-section h4 {
+            border-bottom: 1px solid #333;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            color: var(--primary);
+        }
+
+        .log-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .log-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            border-left: 3px solid var(--primary);
+        }
+
+        @media (max-width: 1200px) {
+            .overview-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .trainer-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-overview-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .overview-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .clients-sidebar {
+                height: auto;
+            }
+
+            .progress-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Overhauled Schedule UI - Simplified & Professional */
+        .schedule-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .schedule-item:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: var(--primary);
+        }
+
+        .schedule-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .schedule-type-badge {
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .type-online {
+            background: rgba(76, 175, 80, 0.1);
+            color: #4CAF50;
+        }
+
+        .type-offline {
+            background: rgba(255, 193, 7, 0.1);
+            color: #FFC107;
+        }
+
+        .schedule-time {
+            font-size: 0.8rem;
+            color: var(--primary);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .schedule-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #fff;
+            margin: 0;
+        }
+
+        .schedule-notes {
+            font-size: 0.8rem;
+            color: #777;
+            line-height: 1.4;
+            padding-left: 10px;
+            border-left: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .schedule-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 5px;
+        }
+
+        .join-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: 0.2s;
+        }
+
+        .join-link:hover {
+            text-decoration: underline;
+            opacity: 0.8;
+        }
+
+        .delete-session-btn {
+            background: rgba(255, 85, 85, 0.1);
+            color: #ff5555;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .delete-session-btn:hover {
+            background: #ff5555;
+            color: white;
+        }
+    </style>
+
+    <!-- Redundant script block completely removed -->
+</body>
+
+</html>

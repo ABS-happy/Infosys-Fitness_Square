@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Details | Fitness Square</title>
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/blog.css">
+</head>
+
+<body class="blog-page">
+
+    <!-- Header (Reused) -->
+    <header id="header">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <img src="logo.png" alt="Fitness Square Logo" class="logo-img">
+                FITNESS <span>SQUARE</span>
+            </a>
+            <nav class="nav-links">
+                <a href="#" id="dashboardLink">Dashboard</a>
+                <a href="blog.html">Community</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="blog-container">
+        <a href="blog.html" class="btn-read-more" style="margin-bottom: 20px; display: inline-block;">
+            <i class="fas fa-arrow-left"></i> Back to Feed
+        </a>
+
+        <div class="post-detail-header">
+            <h1 id="postDetailTitle" class="post-detail-title">Loading...</h1>
+            <div class="post-detail-meta">
+                <span><i class="fas fa-user"></i> <span id="postAuthor"></span></span>
+                <span><i class="fas fa-calendar"></i> <span id="postDate"></span></span>
+            </div>
+        </div>
+
+        <img id="postDetailImage" src="" alt="Post Image"
+            style="width: 100%; max-height: 500px; object-fit: cover; border-radius: 16px; margin-bottom: 30px; display: none;">
+
+        <div id="postBody" class="post-body">
+            <!-- Content injected here -->
+        </div>
+
+        <div class="instagram-action-bar" id="detailActionBar"
+            style="display: flex; justify-content: space-between; align-items: center; margin: 20px 0 10px 0;">
+            <div style="display: flex; gap: 20px; font-size: 1.8rem; align-items: center;">
+                <i id="detailLikeIcon" class="far fa-heart like-icon"
+                    style="cursor: pointer; transition: transform 0.2s;"></i>
+                <i class="far fa-comment" onclick="document.getElementById('commentInput').focus()"
+                    style="cursor: pointer;"></i>
+                <i id="detailSaveIcon" class="far fa-bookmark" style="cursor: pointer; transition: color 0.2s;"
+                    title="Save Post"></i>
+            </div>
+            <!-- Three dots menu placeholder. Content injected by JS -->
+            <div id="detailOptionsMenuContainer" style="position: relative;"></div>
+        </div>
+        <div style="font-weight: 700; margin-bottom: 20px; font-size: 1.1rem;" id="detailLikeCountDisplay">0 likes</div>
+
+        <!-- Report Modal -->
+        <div id="reportModal" class="modal"
+            style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.8); align-items: center; justify-content: center; backdrop-filter: blur(5px);">
+            <div class="modal-content"
+                style="background-color: white; margin: auto; padding: 40px; border-radius: 20px; width: 90%; max-width: 450px; text-align: center; border: 1px solid #ccc; box-shadow: 0 10px 40px rgba(0,0,0,0.5);">
+                <i class="fas fa-exclamation-triangle"
+                    style="font-size: 3rem; color: #ffa502; margin-bottom: 20px;"></i>
+                <h3 style="margin-bottom: 10px; font-size: 1.5rem; color: black;">Report Content</h3>
+                <p style="color: #444; margin-bottom: 30px; font-size: 0.95rem;">Please help us understand
+                    why you are reporting this content.</p>
+
+                <form id="reportForm" onsubmit="handleReportSubmit(event)">
+                    <input type="hidden" id="reportTargetId">
+                    <input type="hidden" id="reportTargetType">
+                    <div style="text-align: left; margin-bottom: 30px;">
+                        <label
+                            style="display: block; margin-bottom: 15px; color: black; font-weight: 600; font-size: 0.95rem;">Select
+                            a reason:</label>
+                        <select id="reportReason" class="form-control"
+                            style="width: 100%; padding: 15px; background: #f9f9f9; border: 2px solid #ccc; border-radius: 12px; color: black; font-family: 'Montserrat', sans-serif; cursor: pointer; transition: all 0.3s ease; outline: none;">
+                            <option value="Spam" style="color: black;">Spam or unwanted commercial
+                                content</option>
+                            <option value="Abusive" style="color: black;">Abusive or hateful content
+                            </option>
+                            <option value="Misinformation" style="color: black;">Misinformation or
+                                fake news</option>
+                            <option value="Irrelevant" style="color: black;">Irrelevant or completely
+                                off-topic</option>
+                            <option value="Wrong" style="color: black;">Wrong content or category</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; gap: 15px; justify-content: space-between;">
+                        <button type="button" onclick="closeReportModal()"
+                            style="flex: 1; padding: 12px 20px; border-radius: 12px; background: transparent; border: 2px solid #ccc; color: black; cursor: pointer; font-family: 'Montserrat', sans-serif; font-weight: 600; transition: all 0.3s ease;"
+                            onmouseover="this.style.background='#eee'"
+                            onmouseout="this.style.background='transparent'">Cancel</button>
+                        <button type="submit"
+                            style="flex: 1; padding: 12px 20px; border-radius: 12px; background: var(--primary); border: none; color: black; font-weight: 700; cursor: pointer; font-family: 'Montserrat', sans-serif; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(255, 204, 0, 0.3);"
+                            onmouseover="this.style.transform='translateY(-2px)'"
+                            onmouseout="this.style.transform='translateY(0)'">Submit Report</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Comments Section -->
+        <div class="comments-section" style="padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1);">
+            <div id="commentsList" class="comment-list"
+                style="margin-bottom: 20px; max-height: 400px; overflow-y: auto;">
+                <!-- Comments injected here -->
+            </div>
+
+            <form id="commentForm"
+                style="display: flex; align-items: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+                <input type="text" id="commentInput" class="form-control" placeholder="Add a comment..."
+                    style="flex-grow: 1; border: none; background: transparent; padding-left: 0;" required>
+                <button type="submit"
+                    style="background: none; border: none; color: var(--blog-secondary); font-weight: 600; cursor: pointer; margin-left: 10px;">Post</button>
+            </form>
+        </div>
+
+        <div id="commentsList" class="comment-list">
+            <!-- Comments injected here -->
+        </div>
+    </div>
+    </div>
+
+    <script src="js/blog.js?v=2"></script>
+    <script>
+        // Check auth
+        const token = localStorage.getItem('token');
+        if (!token) window.location.href = 'login.html';
+
+        // Update dashboard link based on role
+        const userStr = localStorage.getItem('user');
+        if (userStr) {
+            try {
+                const userObj = JSON.parse(userStr);
+                const role = userObj.role;
+
+                const dbLink = document.getElementById('dashboardLink');
+                if (dbLink) {
+                    if (role === 'admin') dbLink.href = 'admin-dashboard.html';
+                    else if (role === 'trainer') dbLink.href = 'trainer-dashboard.html';
+                    else dbLink.href = 'dashboard.html';
+                }
+            } catch (e) {
+                console.error("Error parsing user from localStorage", e);
+            }
+        }
+    </script>
+</body>
+
+</html>

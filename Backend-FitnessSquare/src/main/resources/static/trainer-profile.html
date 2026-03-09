@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trainer Profile | Fitness Square</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body class="profile-page profile-trainer-page" style="padding-top: 100px;">
+
+    <!-- Header -->
+    <header id="header">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <img src="logo.png" alt="Fitness Square Logo" class="logo-img">
+                FITNESS <span>SQUARE</span>
+            </a>
+            <nav class="nav-links">
+                <a href="trainer-dashboard.html" class="btn btn-primary">Dashboard</a>
+                <div class="nav-separator"></div>
+                <a href="#" id="logoutBtn" class="login-link">
+                    <i class="fas fa-sign-out-alt"></i>
+                    LOGOUT
+                </a>
+                <a href="trainer-profile.html" class="profile-link active"><i class="fas fa-user-circle"></i></a>
+            </nav>
+            <div class="hamburger">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <h1>Trainer Profile</h1>
+            <p>Manage your professional details.</p>
+        </div>
+
+        <div class="profile-card-container" style="max-width: 800px; margin: 0 auto;">
+            <div class="login-card profile-edit-card">
+                <form id="profileForm">
+                    <!-- READ ONLY SECTON -->
+                    <div
+                        style="background: rgba(255,255,255,0.03); padding: 20px; border-radius: 8px; margin-bottom: 25px;">
+                        <h4
+                            style="color: var(--primary); margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px;">
+                            <i class="fas fa-lock"></i> Official Credentials
+                        </h4>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Full Name</label>
+                                <input type="text" id="fullname" disabled
+                                    style="background: #111; color: #666; cursor: not-allowed;">
+                            </div>
+                            <div class="form-group">
+                                <label>Email Address</label>
+                                <input type="email" id="email" disabled
+                                    style="background: #111; color: #666; cursor: not-allowed;">
+                            </div>
+                        </div>
+                        <small style="color: #666; display: block; margin-top: 10px;">* These fields are verified and
+                            cannot be changed. Contact admin for updates.</small>
+                    </div>
+
+                    <!-- EDITABLE SECTION -->
+                    <div style="background: rgba(255,255,255,0.03); padding: 20px; border-radius: 8px;">
+                        <h4
+                            style="color: #fff; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px;">
+                            <i class="fas fa-edit"></i> Professional Details
+                        </h4>
+
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="specialization">Specialization</label>
+                                <input type="text" id="specialization" placeholder="e.g. Yoga, Strength Training, HIIT">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="experience">Experience (Years/Detail)</label>
+                                <input type="text" id="experience" placeholder="e.g. 5 Years in HIIT">
+                            </div>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="certificates">Certifications (Comma separated)</label>
+                            <input type="text" id="certificates"
+                                placeholder="e.g. ACE Certified, Yoga Alliance RYT-200">
+                            <small style="color:#888;">Enter your certifications separated by commas.</small>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="bio">Professional Bio</label>
+                            <textarea id="bio" rows="5"
+                                placeholder="Tell members about your coaching style and philosophy..."></textarea>
+                        </div>
+                    </div>
+
+                    <div id="profileMessage" class="form-message"></div>
+
+                    <button type="submit" class="btn btn-primary btn-block" style="margin-top: 30px;">Save
+                        Profile</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

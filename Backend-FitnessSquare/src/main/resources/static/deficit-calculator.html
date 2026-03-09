@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calorie Deficit Calculator | Fitness Square</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="calculator-page">
+    <header id="header">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <img src="logo.png" alt="Fitness Square Logo" class="logo-img">
+                FITNESS <span>SQUARE</span>
+            </a>
+            <nav class="nav-links">
+                <div class="nav-item has-dropdown">
+                    <a href="#" class="nav-link">Tracker</a>
+                    <i class="fas fa-chevron-down"></i>
+                    <div class="dropdown-menu">
+                        <a href="workout-tracker.html" class="dropdown-item"><i class="fas fa-dumbbell"></i> Workout</a>
+                        <a href="sleep-tracker.html" class="dropdown-item"><i class="fas fa-moon"></i> Sleep</a>
+                        <a href="water-tracker.html" class="dropdown-item"><i class="fas fa-tint"></i> Water</a>
+                        <a href="meal-tracker.html" class="dropdown-item"><i class="fas fa-utensils"></i> Meal</a>
+                    </div>
+                </div>
+                <div class="nav-item has-dropdown">
+                    <a href="#" class="nav-link active">Calculator</a>
+                    <i class="fas fa-chevron-down"></i>
+                    <div class="dropdown-menu dropdown-menu-wide">
+                        <a href="bmi-calculator.html" class="dropdown-item"><i class="fas fa-weight"></i> BMI
+                            Calculator</a>
+                        <a href="calorie-calculator.html" class="dropdown-item"><i class="fas fa-fire"></i> Calorie
+                            Calculator</a>
+                        <a href="bodyfat-calculator.html" class="dropdown-item"><i class="fas fa-percentage"></i> Body
+                            Fat Calculator</a>
+                        <a href="deficit-calculator.html" class="dropdown-item active"><i class="fas fa-chart-line"></i>
+                            Calorie Deficit</a>
+                        <a href="hydration-calculator.html" class="dropdown-item"><i class="fas fa-heartbeat"></i>
+                            Hydration Calculator</a>
+                    </div>
+                </div>
+                <div class="nav-separator"></div>
+                <a href="login.html" id="navLogin" class="login-link"><i class="far fa-user"></i> LOGIN</a>
+                <a href="login.html" id="navAction" class="btn btn-primary">Get a Demo</a>
+            </nav>
+            <div class="hamburger"><i class="fas fa-bars"></i></div>
+        </div>
+    </header>
+
+    <section class="calculator-section">
+        <div class="container">
+            <div class="calculator-header">
+                <h1><i class="fas fa-chart-line"></i> Calorie Deficit <span>Calculator</span></h1>
+                <p>Plan your weight loss journey with a sustainable calorie deficit</p>
+            </div>
+
+            <div class="calculator-container">
+                <div class="calculator-card">
+                    <div class="calc-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="currentWeight">Current Weight (kg)</label>
+                                <input type="number" id="currentWeight" placeholder="e.g., 80" min="30" max="300">
+                            </div>
+                            <div class="form-group">
+                                <label for="targetWeight">Target Weight (kg)</label>
+                                <input type="number" id="targetWeight" placeholder="e.g., 70" min="30" max="300">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="tdee">Your TDEE (kcal/day)</label>
+                                <input type="number" id="tdee" placeholder="e.g., 2000" min="1000" max="5000">
+                            </div>
+                            <div class="form-group">
+                                <label for="deficitRate">Weekly Loss Goal</label>
+                                <select id="deficitRate">
+                                    <option value="0.25">0.25 kg/week (Slow)</option>
+                                    <option value="0.5" selected>0.5 kg/week (Moderate)</option>
+                                    <option value="0.75">0.75 kg/week (Fast)</option>
+                                    <option value="1">1 kg/week (Aggressive)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary btn-block" onclick="calculateDeficit()">
+                            <i class="fas fa-calculator"></i> Calculate Deficit Plan
+                        </button>
+                    </div>
+
+                    <div class="calc-result" id="deficitResult" style="display: none;">
+                        <div class="result-grid three-col">
+                            <div class="result-item">
+                                <i class="fas fa-fire-flame-curved"></i>
+                                <span class="value" id="deficitValue">0</span>
+                                <span class="label">Daily Deficit</span>
+                            </div>
+                            <div class="result-item highlight">
+                                <i class="fas fa-utensils"></i>
+                                <span class="value" id="targetCalories">0</span>
+                                <span class="label">Target Calories</span>
+                            </div>
+                            <div class="result-item">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span class="value" id="weeksNeeded">0</span>
+                                <span class="label">Weeks to Goal</span>
+                            </div>
+                        </div>
+                        <div class="timeline-info">
+                            <h4>Your Weight Loss Timeline</h4>
+                            <div class="timeline-bar">
+                                <div class="timeline-progress" id="timelineProgress"></div>
+                                <div class="timeline-markers">
+                                    <span id="startWeight">80 kg</span>
+                                    <span id="endWeight">70 kg</span>
+                                </div>
+                            </div>
+                            <p class="timeline-date" id="goalDate"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3><i class="fas fa-info-circle"></i> Healthy Deficit Tips</h3>
+                    <ul class="info-list">
+                        <li><strong>Safe Range:</strong> Aim for 0.5-1 kg per week max</li>
+                        <li><strong>Minimum Calories:</strong> Men 1500, Women 1200 kcal</li>
+                        <li><strong>Protein:</strong> Keep protein high to preserve muscle</li>
+                        <li><strong>Exercise:</strong> Add activity to increase deficit safely</li>
+                    </ul>
+                    <div class="info-note warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>Never go below 1200 kcal/day without medical supervision.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function calculateDeficit() {
+            const currentWeight = parseFloat(document.getElementById('currentWeight').value);
+            const targetWeight = parseFloat(document.getElementById('targetWeight').value);
+            const tdee = parseFloat(document.getElementById('tdee').value);
+            const deficitRate = parseFloat(document.getElementById('deficitRate').value);
+
+            if (!currentWeight || !targetWeight || !tdee) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            if (targetWeight >= currentWeight) {
+                alert('Target weight should be less than current weight for deficit');
+                return;
+            }
+
+            const weightToLose = currentWeight - targetWeight;
+            const weeksNeeded = Math.ceil(weightToLose / deficitRate);
+            const dailyDeficit = Math.round((deficitRate * 7700) / 7); // 7700 kcal = 1 kg fat
+            const targetCalories = Math.max(1200, tdee - dailyDeficit);
+            const actualDeficit = tdee - targetCalories;
+
+            document.getElementById('deficitValue').textContent = actualDeficit + ' kcal';
+            document.getElementById('targetCalories').textContent = targetCalories + ' kcal';
+            document.getElementById('weeksNeeded').textContent = weeksNeeded + ' weeks';
+            document.getElementById('startWeight').textContent = currentWeight + ' kg';
+            document.getElementById('endWeight').textContent = targetWeight + ' kg';
+
+            const goalDate = new Date();
+            goalDate.setDate(goalDate.getDate() + (weeksNeeded * 7));
+            document.getElementById('goalDate').textContent = 'Goal Date: ' + goalDate.toLocaleDateString('en-IN', {
+                year: 'numeric', month: 'long', day: 'numeric'
+            });
+
+            document.getElementById('deficitResult').style.display = 'block';
+        }
+    </script>
+</body>
+
+</html>

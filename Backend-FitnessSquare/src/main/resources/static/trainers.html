@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find a Trainer | Fitness Square</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="trainers-page">
+
+    <!-- Header (Same as other pages) -->
+    <header id="header">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <img src="logo.png" alt="Fitness Square Logo" class="logo-img">
+                FITNESS <span>SQUARE</span>
+            </a>
+
+            <nav class="nav-links">
+                <!-- Injected dynamically -->
+            </nav>
+
+            <div class="hamburger">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Content -->
+    <section class="trainers-section">
+        <div class="container">
+
+            <!-- Page Header -->
+            <div class="section-title">
+                <h2>Find Your <span>Trainer</span></h2>
+            </div>
+
+            <p class="text-muted"
+                style="max-width: 600px; margin: 0 auto 50px; text-align: center;">
+                Browse our certified professionals and choose the one that best fits your fitness goals.
+                Your journey starts with the right guidance.
+            </p>
+
+            <!-- Trainers Grid -->
+            <div id="trainersList" class="trainers-grid">
+                <!-- Loading State -->
+                <div class="empty-state" style="grid-column: 1 / -1;">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Loading trainers...</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Trainer Confirmation Modal -->
+    <div id="trainerModal" class="checklist-modal-overlay">
+        <div class="checklist-modal">
+
+            <div class="checklist-modal-header">
+                <h2>
+                    <i class="fas fa-user-check"></i>
+                    Confirm Trainer
+                </h2>
+                <button id="cancelBtn" class="close-btn">&times;</button>
+            </div>
+
+            <div class="checklist-modal-content" style="text-align: center;">
+                <p class="text-muted" style="margin-bottom: 25px;">
+                    Are you sure you want to choose
+                    <strong id="modalTrainerName" style="color: var(--primary);"></strong>
+                    as your trainer?
+                </p>
+                <div style="display: flex; justify-content: center; gap: 15px;">
+                    <button class="btn btn-outline" id="cancelBtnAlt">Cancel</button>
+                    <button class="btn btn-primary" id="confirmTrainerBtn">Confirm Selection</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>

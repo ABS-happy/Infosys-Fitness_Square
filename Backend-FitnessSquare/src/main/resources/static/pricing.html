@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing Plans | Fitness Square</title>
+    <meta name="description" content="Choose the perfect membership plan for your fitness journey at Fitness Square.">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="pricing-page">
+
+    <!-- Header -->
+    <header id="header">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <img src="logo.png" alt="Fitness Square Logo" class="logo-img">
+                FITNESS <span>SQUARE</span>
+            </a>
+            <nav class="nav-links">
+                <div class="nav-item has-dropdown">
+                    <a href="#" class="nav-link">Tracker</a>
+                    <i class="fas fa-chevron-down"></i>
+                    <div class="dropdown-menu">
+                        <a href="#" class="dropdown-item"><i class="fas fa-dumbbell"></i> Workout</a>
+                        <a href="#" class="dropdown-item"><i class="fas fa-moon"></i> Sleep</a>
+                        <a href="#" class="dropdown-item"><i class="fas fa-tint"></i> Water</a>
+                        <a href="#" class="dropdown-item"><i class="fas fa-utensils"></i> Meal</a>
+                    </div>
+                </div>
+                <div class="nav-item has-dropdown">
+                    <a href="#" class="nav-link">Calculator</a>
+                    <i class="fas fa-chevron-down"></i>
+                    <div class="dropdown-menu dropdown-menu-wide">
+                        <a href="#" class="dropdown-item"><i class="fas fa-weight"></i> BMI Calculator</a>
+                        <a href="#" class="dropdown-item"><i class="fas fa-fire"></i> Calorie Calculator</a>
+                        <a href="#" class="dropdown-item"><i class="fas fa-percentage"></i> Body Fat & Weight
+                            Management</a>
+                        <a href="#" class="dropdown-item"><i class="fas fa-chart-line"></i> Calorie Deficit
+                            Calculator</a>
+                        <a href="#" class="dropdown-item"><i class="fas fa-heartbeat"></i> Hydration & Longevity</a>
+                    </div>
+                </div>
+                <div class="nav-separator"></div>
+                <a href="login.html" id="navLogin" class="login-link">
+                    <i class="far fa-user"></i>
+                    LOGIN
+                </a>
+                <a href="login.html" id="navAction" class="btn btn-primary">Get a Demo</a>
+            </nav>
+            <div class="hamburger">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Pricing Section -->
+    <section class="pricing-section">
+        <div class="container">
+            <div class="pricing-header">
+                <h1>Choose Your <span>Plan</span></h1>
+                <p>Select the perfect membership that fits your fitness goals and budget</p>
+            </div>
+
+            <div class="pricing-grid">
+                <!-- Basic Plan -->
+                <div class="pricing-card">
+                    <div class="plan-header">
+                        <h2 class="plan-name">Basic</h2>
+                        <div class="plan-price">
+                            <span class="currency">â‚¹</span>
+                            <span class="amount">0</span>
+                            <span class="period">INR / month</span>
+                        </div>
+                        <p class="plan-tagline">Start your fitness journey</p>
+                    </div>
+                    <div class="plan-cta">
+                        <button class="btn btn-outline-light current-plan">Your current plan</button>
+                    </div>
+                    <ul class="plan-features">
+                        <li><i class="fas fa-dumbbell"></i> Access to gym floor</li>
+                        <li><i class="fas fa-clipboard-list"></i> Basic workout plans</li>
+                        <li><i class="fas fa-users"></i> Community support</li>
+                        <li><i class="fas fa-mobile-alt"></i> Limited app features</li>
+                    </ul>
+                </div>
+
+                <!-- Pro Plan -->
+                <div class="pricing-card">
+                    <div class="plan-header">
+                        <h2 class="plan-name">Pro</h2>
+                        <div class="plan-price">
+                            <span class="currency">â‚¹</span>
+                            <span class="amount">999</span>
+                            <span class="period">INR / month <small>(inclusive of GST)</small></span>
+                        </div>
+                        <p class="plan-tagline">Train smarter with guidance</p>
+                    </div>
+                    <div class="plan-cta">
+                        <button class="btn btn-primary-gradient">Upgrade to Pro</button>
+                    </div>
+                    <ul class="plan-features">
+                        <li><i class="fas fa-star"></i> All Basic features</li>
+                        <li><i class="fas fa-user-tie"></i> Personal trainer consultation</li>
+                        <li><i class="fas fa-clipboard-check"></i> Custom workout plans</li>
+                        <li><i class="fas fa-apple-alt"></i> Nutrition guidance</li>
+                        <li><i class="fas fa-chart-line"></i> Progress tracking</li>
+                        <li><i class="fas fa-calendar-alt"></i> Group classes access</li>
+                    </ul>
+                </div>
+
+                <!-- Elite Plan -->
+                <div class="pricing-card featured">
+                    <span class="popular-badge">POPULAR</span>
+                    <div class="plan-header">
+                        <h2 class="plan-name">Elite</h2>
+                        <div class="plan-price">
+                            <span class="currency">â‚¹</span>
+                            <span class="amount">2,499</span>
+                            <span class="period">INR / month <small>(inclusive of GST)</small></span>
+                        </div>
+                        <p class="plan-tagline">Unlock the full experience</p>
+                    </div>
+                    <div class="plan-cta">
+                        <button class="btn btn-primary-gradient">Upgrade to Elite</button>
+                    </div>
+                    <ul class="plan-features">
+                        <li><i class="fas fa-crown"></i> All Pro features</li>
+                        <li><i class="fas fa-user-shield"></i> Dedicated personal trainer</li>
+                        <li><i class="fas fa-clock"></i> 24/7 gym access</li>
+                        <li><i class="fas fa-gem"></i> Premium equipment access</li>
+                        <li><i class="fas fa-spa"></i> Spa & recovery services</li>
+                        <li><i class="fas fa-weight"></i> Monthly body composition analysis</li>
+                        <li><i class="fas fa-bolt"></i> Priority class booking</li>
+                        <li><i class="fas fa-trophy"></i> Exclusive member events</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4 class="logo" style="margin-bottom: 20px;">FITNESS SQUARE</h4>
+                    <p>Inspired by the heritage of Gold's Gym, Fitness Square brings elite training and a community of
+                        strength to the modern world.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#">Find a Gym</a></li>
+                        <li><a href="#">Corporate Wellness</a></li>
+                        <li><a href="#">Franchise Inquiry</a></li>
+                        <li><a href="#">Membership Plans</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Customer Care</h4>
+                    <ul>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Use</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Stay Connected</h4>
+                    <div class="social-links" style="display: flex; gap: 20px; font-size: 1.5rem;">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-x-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Fitness Square. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

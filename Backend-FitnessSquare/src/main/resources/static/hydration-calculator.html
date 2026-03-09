@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hydration Calculator | Fitness Square</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="calculator-page">
+    <header id="header">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <img src="logo.png" alt="Fitness Square Logo" class="logo-img">
+                FITNESS <span>SQUARE</span>
+            </a>
+            <nav class="nav-links">
+                <div class="nav-item has-dropdown">
+                    <a href="#" class="nav-link">Tracker</a>
+                    <i class="fas fa-chevron-down"></i>
+                    <div class="dropdown-menu">
+                        <a href="workout-tracker.html" class="dropdown-item"><i class="fas fa-dumbbell"></i> Workout</a>
+                        <a href="sleep-tracker.html" class="dropdown-item"><i class="fas fa-moon"></i> Sleep</a>
+                        <a href="water-tracker.html" class="dropdown-item"><i class="fas fa-tint"></i> Water</a>
+                        <a href="meal-tracker.html" class="dropdown-item"><i class="fas fa-utensils"></i> Meal</a>
+                    </div>
+                </div>
+                <div class="nav-item has-dropdown">
+                    <a href="#" class="nav-link active">Calculator</a>
+                    <i class="fas fa-chevron-down"></i>
+                    <div class="dropdown-menu dropdown-menu-wide">
+                        <a href="bmi-calculator.html" class="dropdown-item"><i class="fas fa-weight"></i> BMI
+                            Calculator</a>
+                        <a href="calorie-calculator.html" class="dropdown-item"><i class="fas fa-fire"></i> Calorie
+                            Calculator</a>
+                        <a href="bodyfat-calculator.html" class="dropdown-item"><i class="fas fa-percentage"></i> Body
+                            Fat Calculator</a>
+                        <a href="deficit-calculator.html" class="dropdown-item"><i class="fas fa-chart-line"></i>
+                            Calorie Deficit</a>
+                        <a href="hydration-calculator.html" class="dropdown-item active"><i
+                                class="fas fa-heartbeat"></i> Hydration Calculator</a>
+                    </div>
+                </div>
+                <div class="nav-separator"></div>
+                <a href="login.html" id="navLogin" class="login-link"><i class="far fa-user"></i> LOGIN</a>
+                <a href="login.html" id="navAction" class="btn btn-primary">Get a Demo</a>
+            </nav>
+            <div class="hamburger"><i class="fas fa-bars"></i></div>
+        </div>
+    </header>
+
+    <section class="calculator-section">
+        <div class="container">
+            <div class="calculator-header">
+                <h1><i class="fas fa-tint"></i> Hydration <span>Calculator</span></h1>
+                <p>Calculate your daily water intake for optimal health and performance</p>
+            </div>
+
+            <div class="calculator-container">
+                <div class="calculator-card">
+                    <div class="calc-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="weight">Weight (kg)</label>
+                                <input type="number" id="weight" placeholder="e.g., 70" min="30" max="300">
+                            </div>
+                            <div class="form-group">
+                                <label for="activity">Activity Level</label>
+                                <select id="activity">
+                                    <option value="1">Sedentary (desk job)</option>
+                                    <option value="1.2">Light exercise (1-2 days/week)</option>
+                                    <option value="1.4">Moderate exercise (3-5 days/week)</option>
+                                    <option value="1.6">Heavy exercise (6-7 days/week)</option>
+                                    <option value="1.8">Athlete (2x training/day)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="climate">Climate</label>
+                                <select id="climate">
+                                    <option value="1">Cold / Air Conditioned</option>
+                                    <option value="1.1">Moderate / Temperate</option>
+                                    <option value="1.2">Hot / Humid</option>
+                                    <option value="1.3">Very Hot / Tropical</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="workoutDuration">Workout Duration (min)</label>
+                                <input type="number" id="workoutDuration" placeholder="e.g., 60" min="0" max="300"
+                                    value="0">
+                            </div>
+                        </div>
+                        <button class="btn btn-primary btn-block" onclick="calculateHydration()">
+                            <i class="fas fa-calculator"></i> Calculate Hydration Needs
+                        </button>
+                    </div>
+
+                    <div class="calc-result" id="hydrationResult" style="display: none;">
+                        <div class="result-value large water">
+                            <i class="fas fa-glass-water"></i>
+                            <span class="value" id="waterLiters">0</span>
+                            <span class="label">Liters per Day</span>
+                        </div>
+                        <div class="water-breakdown">
+                            <div class="water-item">
+                                <i class="fas fa-glass-water-droplet"></i>
+                                <span class="value" id="glassesCount">0</span>
+                                <span class="label">Glasses (250ml)</span>
+                            </div>
+                            <div class="water-item">
+                                <i class="fas fa-bottle-water"></i>
+                                <span class="value" id="bottlesCount">0</span>
+                                <span class="label">Bottles (500ml)</span>
+                            </div>
+                        </div>
+                        <div class="hydration-schedule">
+                            <h4>Suggested Schedule</h4>
+                            <div class="schedule-grid" id="scheduleGrid"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3><i class="fas fa-info-circle"></i> Hydration Benefits</h3>
+                    <ul class="info-list">
+                        <li><i class="fas fa-brain"></i> Improves brain function and focus</li>
+                        <li><i class="fas fa-bolt"></i> Boosts energy and reduces fatigue</li>
+                        <li><i class="fas fa-heart"></i> Supports heart and kidney health</li>
+                        <li><i class="fas fa-dumbbell"></i> Enhances workout performance</li>
+                        <li><i class="fas fa-spa"></i> Promotes healthy skin</li>
+                    </ul>
+                    <div class="info-note">
+                        <i class="fas fa-lightbulb"></i>
+                        <span>Drink water before you feel thirsty - thirst is a sign you're already dehydrated!</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function calculateHydration() {
+            const weight = parseFloat(document.getElementById('weight').value);
+            const activity = parseFloat(document.getElementById('activity').value);
+            const climate = parseFloat(document.getElementById('climate').value);
+            const workout = parseFloat(document.getElementById('workoutDuration').value) || 0;
+
+            if (!weight) {
+                alert('Please enter your weight');
+                return;
+            }
+
+            // Base: 35ml per kg of body weight
+            let baseWater = weight * 35;
+            baseWater *= activity; // Activity factor
+            baseWater *= climate; // Climate factor
+            baseWater += (workout * 10); // Extra 10ml per minute of workout
+
+            const liters = (baseWater / 1000).toFixed(1);
+            const glasses = Math.ceil(baseWater / 250);
+            const bottles = Math.ceil(baseWater / 500);
+
+            document.getElementById('waterLiters').textContent = liters + ' L';
+            document.getElementById('glassesCount').textContent = glasses;
+            document.getElementById('bottlesCount').textContent = bottles;
+
+            // Generate schedule
+            const scheduleGrid = document.getElementById('scheduleGrid');
+            const glassesPerHour = [
+                { time: '7:00 AM', label: 'Wake up', glasses: 2 },
+                { time: '9:00 AM', label: 'Morning', glasses: 1 },
+                { time: '11:00 AM', label: 'Mid-morning', glasses: 1 },
+                { time: '1:00 PM', label: 'Lunch', glasses: 2 },
+                { time: '3:00 PM', label: 'Afternoon', glasses: 1 },
+                { time: '5:00 PM', label: 'Evening', glasses: 1 },
+                { time: '7:00 PM', label: 'Dinner', glasses: 1 },
+                { time: '9:00 PM', label: 'Night', glasses: 1 }
+            ];
+
+            scheduleGrid.innerHTML = glassesPerHour.map(item => `
+                <div class="schedule-item">
+                    <span class="time">${item.time}</span>
+                    <span class="glasses">${'ðŸ’§'.repeat(item.glasses)}</span>
+                    <span class="label">${item.label}</span>
+                </div>
+            `).join('');
+
+            document.getElementById('hydrationResult').style.display = 'block';
+        }
+    </script>
+</body>
+
+</html>

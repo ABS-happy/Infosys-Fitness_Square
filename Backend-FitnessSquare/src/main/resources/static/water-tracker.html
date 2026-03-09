@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Water Tracker | Fitness Square</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="tracker-page">
+
+    <!-- HEADER -->
+    <header id="header">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <img src="logo.png" alt="Fitness Square Logo" class="logo-img">
+                FITNESS <span>SQUARE</span>
+            </a>
+
+            <nav class="nav-links">
+                <div class="nav-item has-dropdown">
+                    <a href="#" class="nav-link active">Tracker</a>
+                    <i class="fas fa-chevron-down"></i>
+                    <div class="dropdown-menu">
+                        <a href="workout-tracker.html" class="dropdown-item"><i class="fas fa-dumbbell"></i> Workout</a>
+                        <a href="sleep-tracker.html" class="dropdown-item"><i class="fas fa-moon"></i> Sleep</a>
+                        <a href="water-tracker.html" class="dropdown-item active"><i class="fas fa-tint"></i> Water</a>
+                        <a href="meal-tracker.html" class="dropdown-item"><i class="fas fa-utensils"></i> Meal</a>
+                    </div>
+                </div>
+
+
+                <div class="nav-separator"></div>
+                <a href="dashboard.html" class="btn btn-primary">Dashboard</a>
+
+            </nav>
+        </div>
+    </header>
+
+    <!-- CONTENT -->
+    <section class="tracker-section water-theme">
+        <div class="container">
+
+            <div class="tracker-header">
+                <h1><i class="fas fa-tint"></i> Water <span>Tracker</span></h1>
+                <p>Stay hydrated and track your daily water intake</p>
+            </div>
+
+            <div id="trackerContainer" class="tracker-container">
+
+                <!-- MAIN CARD -->
+                <div class="tracker-card main-card water-card">
+                    <div class="card-header"
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3 style="margin: 0;"><i class="fas fa-tint"></i> Today's Intake</h3>
+                        <span class="date-badge" id="todayDate"></span>
+                    </div>
+
+                    <div class="water-progress-container">
+                        <div class="ring-glow"></div>
+                        <svg class="progress-ring" width="240" height="240">
+                            <defs>
+                                <linearGradient id="waterGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#00f2fe" />
+                                    <stop offset="50%" stop-color="#4facfe" />
+                                    <stop offset="100%" stop-color="#00f2fe" />
+                                </linearGradient>
+                                <filter id="glow">
+                                    <feGaussianBlur stdDeviation="5" result="coloredBlur" />
+                                    <feMerge>
+                                        <feMergeNode in="coloredBlur" />
+                                        <feMergeNode in="SourceGraphic" />
+                                    </feMerge>
+                                </filter>
+                            </defs>
+                            <circle class="progress-ring__background" stroke-width="12" fill="transparent" r="100"
+                                cx="120" cy="120" />
+                            <circle class="progress-ring__circle" id="waterRing" stroke-width="12" fill="transparent"
+                                r="100" cx="120" cy="120" filter="url(#glow)" />
+                        </svg>
+                        <div class="progress-ring__content">
+                            <div class="liquid-bg"></div>
+                            <div class="liquid-bg-secondary"></div>
+                            <span class="current-value" id="currentWater">0</span>
+                            <span class="current-label">ml consumed</span>
+                            <div class="stat-goal">
+                                Goal: <span class="goal-value" id="goalWater">3000</span> ml
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="custom-add">
+                        <input type="number" id="customAmount" placeholder="Amount (ml)">
+                        <input type="hidden" id="waterDate" class="date-picker-input">
+                        <button class="btn btn-primary" onclick="addCustomWater()">Add</button>
+                    </div>
+
+                    <div class="water-log">
+                        <h4>Log for <span id="logDateLabel">Today</span></h4>
+                        <div id="logEntries"></div>
+                    </div>
+                </div>
+
+                <!-- SIDE CARD -->
+                <div class="tracker-card side-card">
+
+
+                    <h3><i class="fas fa-chart-line"></i> Weekly Progress</h3>
+                    <div class="weekly-water" id="weeklyWaterProgress"></div>
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SCRIPTS -->
+    <script src="script.js"></script>
+    <script>
+        let currentWater = 0;
+        let goalWater = 3000;
+        let waterLog = [];
+        let editingId = null;
+        const token = localStorage.getItem('token');
+
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('waterDate').value = today;
+
+        const dateBadge = document.getElementById('todayDate');
+        if (dateBadge) {
+            dateBadge.textContent = new Date().toLocaleDateString('en-IN', {
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+            });
+        }
+
+        if (token) {
+            loadUserProfile();
+            loadWaterLogs();
+        }
+
+        async function loadUserProfile() {
+            try {
+                const res = await fetch('/api/member/profile', {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    const user = await res.json();
+                    localStorage.setItem('user', JSON.stringify(user));
+                    if (user.targetWaterLiters) {
+                        goalWater = user.targetWaterLiters * 1000;
+                        document.getElementById('goalWater').textContent = goalWater;
+                        updateDisplay();
+                    }
+                }
+            } catch (err) {
+                console.error("Error loading profile:", err);
+            }
+        }
+
+        document.getElementById('goalWater').textContent = goalWater;
+
+        async function loadWaterLogs() {
+            const res = await fetch('/api/water', {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            if (!res.ok) return;
+
+            const data = await res.json();
+            const date = document.getElementById('waterDate').value;
+
+            waterLog = data.filter(l => l.logDate === date);
+            currentWater = waterLog.reduce((s, l) => s + Number(l.waterIntake), 0);
+
+            const todayStr = new Date().toISOString().split('T')[0];
+            document.getElementById('logDateLabel').textContent = date === todayStr ? 'Today' : date;
+
+            updateDisplay();
+            updateWeeklyWaterProgress(data);
+        }
+
+        function updateWeeklyWaterProgress(allLogs) {
+            const container = document.getElementById('weeklyWaterProgress');
+            container.innerHTML = '';
+
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            const now = new Date();
+
+            for (let i = 6; i >= 0; i--) {
+                const d = new Date();
+                d.setDate(now.getDate() - i);
+
+                const dateStr = d.toISOString().split('T')[0];
+                const label = i === 0 ? 'Today' : days[d.getDay()];
+
+                const total = allLogs
+                    .filter(l => l.logDate === dateStr)
+                    .reduce((s, l) => s + Number(l.waterIntake), 0);
+
+                const percent = Math.min(Math.round((total / goalWater) * 100), 100);
+
+                container.innerHTML += `
+				  <div class="day-progress ${i === 0 ? 'today' : ''}">
+				    <span class="day">${label}</span>
+				    <div class="progress-bar" title="${percent}% completed">
+				      <div class="progress" style="width:${percent}%"></div>
+				    </div>
+				  </div>
+				`;
+
+            }
+        }
+
+        function addWater(amount) {
+            let url = '/api/water';
+            let method = 'POST';
+
+            if (editingId !== null) {
+                url = `/api/water/${editingId}`;
+                method = 'PUT';
+            }
+
+            fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    waterIntake: amount,
+                    logDate: document.getElementById('waterDate').value
+                })
+            }).then(async (response) => {
+                if (response.ok) {
+                    const data = await response.json();
+                    loadWaterLogs();
+                    cancelWaterEdit();
+                    if (window.showToast) {
+                        window.showToast("Water logged successfully!", "success");
+                        if (data.completedGoals && data.completedGoals.length > 0) {
+                            data.completedGoals.forEach(g => {
+                                setTimeout(() => window.showToast(`Goal Completed: ${g}`, "success"), 500);
+                            });
+                        }
+                    }
+                }
+            });
+        }
+
+        function editWaterLog(index) {
+            const log = waterLog[index];
+            if (!log) return;
+
+            editingId = log.id;
+            document.getElementById('customAmount').value = log.waterIntake;
+
+            const btn = document.querySelector('.custom-add button');
+            btn.textContent = 'Update';
+            btn.classList.replace('btn-primary', 'btn-secondary');
+
+            // Add a cancel button if not exists
+            if (!document.getElementById('cancelWaterEditBtn')) {
+                const cancelBtn = document.createElement('button');
+                cancelBtn.id = 'cancelWaterEditBtn';
+                cancelBtn.className = 'btn';
+                cancelBtn.style.marginLeft = '10px';
+                cancelBtn.textContent = 'Cancel';
+                cancelBtn.onclick = cancelWaterEdit;
+                btn.parentNode.appendChild(cancelBtn);
+            }
+        }
+
+        function cancelWaterEdit() {
+            editingId = null;
+            document.getElementById('customAmount').value = '';
+            const btn = document.querySelector('.custom-add button');
+            btn.textContent = 'Add';
+            btn.classList.replace('btn-secondary', 'btn-primary');
+            const cancelBtn = document.getElementById('cancelWaterEditBtn');
+            if (cancelBtn) cancelBtn.remove();
+        }
+
+        function addCustomWater() {
+            const amt = Number(document.getElementById('customAmount').value);
+            if (amt > 0) addWater(amt);
+            document.getElementById('customAmount').value = '';
+        }
+
+
+
+
+        async function deleteWaterLog(id) {
+            if (!id) return;
+            if (!confirm('Delete this entry?')) return;
+
+            try {
+                const response = await fetch(`/api/water/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (response.ok) {
+                    loadWaterLogs();
+                } else {
+                    const msg = await response.text();
+                    alert(msg || 'Failed to delete');
+                }
+            } catch (err) {
+                console.error('Error deleting water log:', err);
+            }
+        }
+
+        function updateDisplay() {
+            document.getElementById('currentWater').textContent = currentWater;
+            const percent = Math.min((currentWater / goalWater), 1);
+
+            const circle = document.getElementById('waterRing');
+            if (circle) {
+                const radius = circle.r.baseVal.value;
+                const circumference = radius * 2 * Math.PI;
+                const offset = circumference - percent * circumference;
+                circle.style.strokeDasharray = `${circumference} ${circumference}`;
+                circle.style.strokeDashoffset = offset;
+            }
+
+            const logContainer = document.getElementById('logEntries');
+            if (waterLog.length === 0) {
+                logContainer.innerHTML = `
+                    <div class="empty-log-state" style="text-align: center; padding: 30px; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px dashed rgba(255,255,255,0.1);">
+                        <i class="fas fa-tint" style="font-size: 3rem; color: rgba(255, 255, 255, 0.1); margin-bottom: 15px;"></i>
+                        <h4 style="color: white; margin-bottom: 5px;">Hydration is Key!</h4>
+                        <p style="color: var(--text-muted); font-size: 0.9rem;">Add your first drink of the day.</p>
+                    </div>`;
+                return;
+            }
+
+            logContainer.innerHTML = waterLog.map((log, i) => `
+                <div class="log-item" style="padding: 10px; border-radius: 8px; border-left: 4px solid #FFCC00; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; background: rgba(255,255,255,0.05);">
+                    <div style="display: flex; align-items: center;">
+                        <i class="fas fa-tint" style="color: #FFCC00 !important; margin-right: 12px;"></i>
+                        <span style="color: white; font-weight: 500;">${log.waterIntake} ml</span>
+                    </div>
+                    <div class="actions">
+                        <button class="edit-btn" onclick="editWaterLog(${i})" title="Edit" style="background: none; border: none; color: #FFCC00; margin-right: 10px; cursor: pointer;">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="remove-btn" onclick="deleteWaterLog('${log.id}')" style="background: none; border: none; color: #ff4444; cursor: pointer;">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('waterDate').addEventListener('change', (e) => {
+            if (window.restrictTrackerInput) window.restrictTrackerInput(e.target.value, 'trackerContainer');
+            loadWaterLogs();
+        });
+        setTimeout(() => {
+            const dInput = document.getElementById('waterDate');
+            if (dInput && dInput.value && window.restrictTrackerInput) {
+                window.restrictTrackerInput(dInput.value, 'trackerContainer');
+            }
+        }, 100);
+    </script>
+</body>
+
+</html>

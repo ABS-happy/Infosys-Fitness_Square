@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find a Trainer | Fitness Square</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="dashboard-page trainers-page">
+
+    <!-- Header -->
+    <header id="header">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <img src="logo.png" alt="Fitness Square Logo" class="logo-img">
+                FITNESS <span>SQUARE</span>
+            </a>
+            <nav class="nav-links">
+                <!-- Links injected by script.js -->
+                <a href="dashboard.html" class="btn btn-primary">Dashboard</a>
+            </nav>
+            <div class="hamburger">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Content -->
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <h1>Expert Trainers</h1>
+            <p>Select a personal trainer to guide you on your fitness journey.</p>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="trainer-filter"
+            style="margin-bottom: 40px; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: space-between;">
+            <div>
+                <label for="specializationFilter" style="font-weight: 700; margin-right: 10px;">Filter by
+                    Specialization:</label>
+                <select id="specializationFilter"
+                    style="padding: 10px; border-radius: 6px; border: 1px solid #ddd; min-width: 250px;">
+                    <option value="all">All Specializations</option>
+                    <option value="Weight Loss">Weight Loss</option>
+                    <option value="Muscle Gain">Muscle Gain</option>
+                    <option value="General Fitness">General Fitness</option>
+                    <option value="Strength Training">Strength Training</option>
+                    <option value="Cardio Training">Cardio Training</option>
+                    <option value="Yoga & Flexibility">Yoga & Flexibility</option>
+                    <option value="Diabetes Management">Diabetes Management</option>
+                    <option value="Heart Health">Heart Health</option>
+                    <option value="Women Fitness">Women Fitness</option>
+                    <option value="Senior Fitness">Senior Fitness</option>
+                    <option value="Post Injury Rehab">Post Injury Rehab</option>
+                </select>
+            </div>
+            <p id="trainerCount" style="color: #666; font-weight: 600;">Showing all trainers</p>
+        </div>
+
+        <!-- Trainers Grid -->
+        <div id="trainersGrid" class="verticals-grid"
+            style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));">
+            <!-- Loading State -->
+            <div style="grid-column: 1/-1; text-align: center; padding: 50px;">
+                <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: var(--primary);"></i>
+                <p style="margin-top: 20px; font-weight: 600;">Finding the best trainers for you...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trainer Detail Modal -->
+    <div id="trainerModal" class="checklist-modal-overlay">
+        <div class="checklist-modal"
+            style="max-width: 650px; background: #111; border: 1px solid #333; box-shadow: 0 0 30px rgba(0,0,0,0.8);">
+            <div class="checklist-modal-header"
+                style="background: #000; border-bottom: 1px solid #222; padding: 25px 30px;">
+                <h2 id="modalTrainerName"
+                    style="color: var(--primary); font-weight: 900; letter-spacing: 1px; text-transform: uppercase;">
+                    Trainer Details</h2>
+                <button id="closeTrainerModal" class="close-btn" style="color: #666;">&times;</button>
+            </div>
+            <div class="checklist-modal-content" style="background: #111; padding: 35px;">
+                <div class="trainer-detail-hero" style="border-bottom-color: #222;">
+                    <div class="trainer-detail-avatar">
+                        <i class="fas fa-user-ninja"></i>
+                    </div>
+                    <h3 id="modalTrainerSpec" class="trainer-detail-spec">SPECIALIZATION</h3>
+                </div>
+
+                <div class="detail-section">
+                    <h4><i class="fas fa-quote-left"></i> BIO</h4>
+                    <p id="modalTrainerBio">Loading bio...</p>
+                </div>
+
+                <div class="detail-section">
+                    <h4><i class="fas fa-certificate"></i> CERTIFICATIONS</h4>
+                    <ul id="modalTrainerCerts" class="certs-list">
+                        <!-- List items injected here -->
+                    </ul>
+                </div>
+
+                <div class="detail-section">
+                    <h4><i class="fas fa-envelope"></i> CONTACT</h4>
+                    <p id="modalTrainerEmail" class="contact-info-p" style="background: #222; color: #fff;"></p>
+                </div>
+
+                <div
+                    style="background: rgba(255, 204, 0, 0.05); padding: 20px; border-radius: 12px; border: 1px solid rgba(255, 204, 0, 0.2); margin-top: 10px;">
+                    <p style="font-size: 0.9rem; color: #aaa; line-height: 1.5;">
+                        <i class="fas fa-info-circle" style="color: var(--primary);"></i> <strong>Note:</strong>
+                        Selecting this trainer will assign them as your primary guide. They will be able to view your
+                        progress and health stats.
+                    </p>
+                </div>
+            </div>
+            <div class="checklist-modal-footer"
+                style="background: #000; border-top: 1px solid #222; padding: 20px 30px;">
+                <button id="confirmTrainerBtn" class="btn btn-primary"
+                    style="width: 100%; height: 55px; font-size: 1.1rem; border-radius: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">
+                    SELECT THIS TRAINER
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trainer Selection Confirmation Modal -->
+    <div id="selectionModal" class="checklist-modal-overlay">
+        <div class="checklist-modal"
+            style="max-width: 500px; background: #111; border: 1px solid #333; box-shadow: 0 0 30px rgba(0,0,0,0.8);">
+            <div class="checklist-modal-header"
+                style="background: #000; border-bottom: 1px solid #222; padding: 20px 30px;">
+                <h2
+                    style="color: var(--primary); font-weight: 900; letter-spacing: 1px; text-transform: uppercase; font-size: 1.2rem;">
+                    Confirm Selection</h2>
+                <button id="closeSelectionModal" class="close-btn" style="color: #666;">&times;</button>
+            </div>
+            <div class="checklist-modal-content" style="background: #111; padding: 30px; text-align: center;">
+                <div class="trainer-detail-avatar" style="width: 80px; height: 80px; margin-bottom: 20px;">
+                    <i class="fas fa-user-check" style="font-size: 2.5rem; color: var(--dark);"></i>
+                </div>
+                <p style="color: #fff; font-size: 1.1rem; margin-bottom: 10px;">Are you sure you want to choose</p>
+                <h3 id="selectionTrainerName"
+                    style="color: var(--primary); font-size: 1.8rem; font-weight: 900; text-transform: uppercase; margin-bottom: 25px;">
+                    TRAINER NAME</h3>
+                <p style="color: #888; font-size: 0.9rem; line-height: 1.5;">This will set them as your official trainer
+                    and allow them to track your progress.</p>
+            </div>
+            <div class="checklist-modal-footer"
+                style="background: #000; border-top: 1px solid #222; padding: 20px 30px; display: flex; gap: 15px;">
+                <button id="cancelSelectionBtn" class="btn btn-outline"
+                    style="flex: 1; border-color: #333; color: #888;">CANCEL</button>
+                <button id="confirmSelectionBtn" class="btn btn-primary"
+                    style="flex: 2; font-weight: 800; text-transform: uppercase;">CONFIRM SELECTION</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js?v=1.1"></script>
+</body>
+
+</html>
