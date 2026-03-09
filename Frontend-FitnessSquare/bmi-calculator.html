@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMI Calculator | Fitness Square</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="calculator-page">
+    <header id="header">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <img src="logo.png" alt="Fitness Square Logo" class="logo-img">
+                FITNESS <span>SQUARE</span>
+            </a>
+            <nav class="nav-links">
+                <div class="nav-item has-dropdown">
+                    <a href="#" class="nav-link">Tracker</a>
+                    <i class="fas fa-chevron-down"></i>
+                    <div class="dropdown-menu">
+                        <a href="workout-tracker.html" class="dropdown-item"><i class="fas fa-dumbbell"></i> Workout</a>
+                        <a href="sleep-tracker.html" class="dropdown-item"><i class="fas fa-moon"></i> Sleep</a>
+                        <a href="water-tracker.html" class="dropdown-item"><i class="fas fa-tint"></i> Water</a>
+                        <a href="meal-tracker.html" class="dropdown-item"><i class="fas fa-utensils"></i> Meal</a>
+                    </div>
+                </div>
+                <div class="nav-item has-dropdown">
+                    <a href="#" class="nav-link active">Calculator</a>
+                    <i class="fas fa-chevron-down"></i>
+                    <div class="dropdown-menu dropdown-menu-wide">
+                        <a href="bmi-calculator.html" class="dropdown-item active"><i class="fas fa-weight"></i> BMI
+                            Calculator</a>
+                        <a href="calorie-calculator.html" class="dropdown-item"><i class="fas fa-fire"></i> Calorie
+                            Calculator</a>
+                        <a href="bodyfat-calculator.html" class="dropdown-item"><i class="fas fa-percentage"></i> Body
+                            Fat Calculator</a>
+                        <a href="deficit-calculator.html" class="dropdown-item"><i class="fas fa-chart-line"></i>
+                            Calorie Deficit</a>
+                        <a href="hydration-calculator.html" class="dropdown-item"><i class="fas fa-heartbeat"></i>
+                            Hydration Calculator</a>
+                    </div>
+                </div>
+                <div class="nav-separator"></div>
+                <a href="login.html" id="navLogin" class="login-link"><i class="far fa-user"></i> LOGIN</a>
+                <a href="login.html" id="navAction" class="btn btn-primary">Get a Demo</a>
+            </nav>
+            <div class="hamburger"><i class="fas fa-bars"></i></div>
+        </div>
+    </header>
+
+    <section class="calculator-section">
+        <div class="container">
+            <div class="calculator-header">
+                <h1><i class="fas fa-weight"></i> BMI <span>Calculator</span></h1>
+                <p>Calculate your Body Mass Index to understand your weight category</p>
+            </div>
+
+            <div class="calculator-container">
+                <div class="calculator-card">
+                    <div class="calc-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="height">Height (cm)</label>
+                                <input type="number" id="height" placeholder="e.g., 175" min="50" max="300">
+                            </div>
+                            <div class="form-group">
+                                <label for="weight">Weight (kg)</label>
+                                <input type="number" id="weight" placeholder="e.g., 70" min="20" max="500">
+                            </div>
+                        </div>
+                        <button class="btn btn-primary btn-block" onclick="calculateBMI()">
+                            <i class="fas fa-calculator"></i> Calculate BMI
+                        </button>
+                    </div>
+
+                    <div class="calc-result" id="bmiResult" style="display: none;">
+                        <div class="result-value">
+                            <span class="label">Your BMI</span>
+                            <span class="value" id="bmiValue">0.0</span>
+                        </div>
+                        <div class="result-category" id="bmiCategory">
+                            <span class="category-badge">Normal</span>
+                            <p class="category-desc" id="bmiDesc"></p>
+                        </div>
+                        <div class="bmi-scale">
+                            <div class="scale-bar">
+                                <div class="scale-marker" id="bmiMarker"></div>
+                            </div>
+                            <div class="scale-labels">
+                                <span>Underweight<br>&lt;18.5</span>
+                                <span>Normal<br>18.5-24.9</span>
+                                <span>Overweight<br>25-29.9</span>
+                                <span>Obese<br>&gt;30</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3><i class="fas fa-info-circle"></i> What is BMI?</h3>
+                    <p>Body Mass Index (BMI) is a simple measure using height and weight to categorize adults as
+                        underweight, normal weight, overweight, or obese.</p>
+                    <ul class="info-list">
+                        <li><strong>Underweight:</strong> BMI less than 18.5</li>
+                        <li><strong>Normal weight:</strong> BMI 18.5 to 24.9</li>
+                        <li><strong>Overweight:</strong> BMI 25 to 29.9</li>
+                        <li><strong>Obese:</strong> BMI 30 or greater</li>
+                    </ul>
+                    <div class="info-note">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>BMI is a screening tool and doesn't account for muscle mass, bone density, or overall body
+                            composition.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function calculateBMI() {
+            const height = parseFloat(document.getElementById('height').value);
+            const weight = parseFloat(document.getElementById('weight').value);
+
+            if (!height || !weight || height <= 0 || weight <= 0) {
+                alert('Please enter valid height and weight values');
+                return;
+            }
+
+            const heightInMeters = height / 100;
+            const bmi = weight / (heightInMeters * heightInMeters);
+            const bmiRounded = bmi.toFixed(1);
+
+            document.getElementById('bmiValue').textContent = bmiRounded;
+            document.getElementById('bmiResult').style.display = 'block';
+
+            let category, categoryClass, desc;
+            if (bmi < 18.5) {
+                category = 'Underweight';
+                categoryClass = 'underweight';
+                desc = 'You may need to gain some weight. Consider consulting a nutritionist.';
+            } else if (bmi < 25) {
+                category = 'Normal';
+                categoryClass = 'normal';
+                desc = 'Great! You are at a healthy weight. Keep maintaining your lifestyle.';
+            } else if (bmi < 30) {
+                category = 'Overweight';
+                categoryClass = 'overweight';
+                desc = 'Consider losing some weight through diet and exercise for better health.';
+            } else {
+                category = 'Obese';
+                categoryClass = 'obese';
+                desc = 'It is recommended to consult a healthcare professional for guidance.';
+            }
+
+            const badge = document.querySelector('.category-badge');
+            badge.textContent = category;
+            badge.className = 'category-badge ' + categoryClass;
+            document.getElementById('bmiDesc').textContent = desc;
+
+            // Update marker position (0-100%)
+            let markerPos = ((bmi - 15) / 25) * 100;
+            markerPos = Math.max(0, Math.min(100, markerPos));
+            document.getElementById('bmiMarker').style.left = markerPos + '%';
+        }
+    </script>
+</body>
+
+</html>

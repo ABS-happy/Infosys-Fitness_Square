@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Fitness Square</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- html2pdf for report generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+
+
+<body class="dashboard-page">
+
+    <!-- Header -->
+    <header id="header">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <img src="logo.png" alt="Fitness Square Logo" class="logo-img">
+                FITNESS <span>SQUARE</span>
+            </a>
+            <nav class="nav-links">
+                <div class="nav-item has-dropdown">
+                    <a href="#" class="nav-link">Tracker</a>
+                    <i class="fas fa-chevron-down"></i>
+                    <div class="dropdown-menu">
+                        <a href="workout-tracker.html" class="dropdown-item"><i class="fas fa-dumbbell"></i> Workout</a>
+                        <a href="sleep-tracker.html" class="dropdown-item"><i class="fas fa-moon"></i> Sleep</a>
+                        <a href="water-tracker.html" class="dropdown-item"><i class="fas fa-tint"></i> Water</a>
+                        <a href="meal-tracker.html" class="dropdown-item"><i class="fas fa-utensils"></i> Meal</a>
+                    </div>
+                </div>
+                <div class="nav-item has-dropdown">
+                    <a href="#" class="nav-link">Calculator</a>
+                    <i class="fas fa-chevron-down"></i>
+                    <div class="dropdown-menu dropdown-menu-wide">
+                        <a href="bmi-calculator.html" class="dropdown-item"><i class="fas fa-weight"></i> BMI
+                            Calculator</a>
+                        <a href="calorie-calculator.html" class="dropdown-item"><i class="fas fa-fire"></i> Calorie
+                            Calculator</a>
+                        <a href="bodyfat-calculator.html" class="dropdown-item"><i class="fas fa-percentage"></i> Body
+                            Fat Calculator</a>
+                        <a href="deficit-calculator.html" class="dropdown-item"><i class="fas fa-chart-line"></i>
+                            Calorie Deficit</a>
+                        <a href="hydration-calculator.html" class="dropdown-item"><i class="fas fa-heartbeat"></i>
+                            Hydration Calculator</a>
+                    </div>
+                </div>
+                <a href="blog.html">Community</a>
+                <div class="nav-item" id="notificationNav" style="position: relative; cursor: pointer; display: none;">
+                    <i class="fas fa-bell"></i>
+                    <span id="notificationBadge" class="badge">0</span>
+                    <div id="notificationDropdown" class="dropdown-menu notification-dropdown">
+                        <div class="dropdown-header">Notifications</div>
+                        <div id="notificationList" class="notification-list">
+                            <div class="dropdown-item">No new notifications</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-separator"></div>
+                <a href="#" id="checklistBtn" class="nav-link-btn">
+                    <i class="fas fa-list-check"></i>
+                    CHECKLIST
+                </a>
+                <a href="#" id="logoutBtn" class="login-link">
+                    <i class="fas fa-sign-out-alt"></i>
+                    LOGOUT
+                </a>
+                <a href="dashboard.html" class="btn btn-primary">Dashboard</a>
+
+            </nav>
+            <div class="hamburger">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard-container">
+        <div class="dashboard-layout">
+            <!-- Sticky Sidebar -->
+            <aside class="dashboard-sidebar">
+                <div class="profile-card sticky-card">
+                    <div class="profile-header">
+                        <i class="fas fa-user-circle profile-icon"></i>
+                        <h3 id="sidebarUsername">Loading...</h3>
+                    </div>
+                    <div class="profile-details">
+                        <p><i class="fas fa-envelope"></i> <span id="sidebarEmail">--</span></p>
+                        <p><i class="fas fa-user-clock"></i> <span id="sidebarAge">--</span> yrs</p>
+                        <p class="goal-highlight"><i class="fas fa-bullseye"></i> Goal: <br><span id="sidebarGoal"
+                                style="font-size: 1.1em; color: var(--primary);">--</span></p>
+                        <p class="streak-highlight"
+                            style="margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1);">
+                            <i class="fas fa-fire-alt" style="color: var(--primary);"></i> Streak:
+                            <span id="sidebarStreak" style="font-weight: 700; color: var(--primary);">0 Days</span>
+                        </p>
+                    </div>
+                </div>
+            </aside>
+            <div class="dashboard-main">
+                <div class="dashboard-header">
+                    <h1 id="welcomeMessage">Welcome Back!</h1>
+                    <p>Here is your daily fitness overview.</p>
+                    <div class="tip-card" style="margin-top: 15px;">
+                        <h3
+                            style="color: var(--white); font-size: 20px; font-weight: 700; margin: 0 0 15px 0; display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-lightbulb"></i>
+                            Health Tip of the Day
+                        </h3>
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                            <strong id="dailyTipCategory"
+                                style="color: var(--primary); font-size: 17px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Daily
+                                Insight</strong>
+                        </div>
+                        <p id="dailyTipText"
+                            style="margin: 0; color: #eee; font-size: 18px; line-height: 1.6; font-weight: 500;">Loading
+                            your
+                            personalized health tip...</p>
+                    </div>
+                    <!-- Activity Tracker Controls -->
+                    <div class="activity-controls vertical-card">
+                        <div class="date-picker-group">
+                            <label>View Date</label>
+                            <input type="date" id="activityDatePicker" class="custom-date-input">
+                        </div>
+                        <div class="filter-group">
+                            <button class="filter-tab active" data-filter="daily">Daily</button>
+                            <button class="filter-tab" data-filter="weekly">Weekly</button>
+                            <button class="filter-tab" data-filter="monthly">Monthly</button>
+                        </div>
+
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-item vertical-card">
+                            <div class="stat-ring-container">
+                                <svg viewBox="0 0 100 100">
+                                    <circle class="stat-ring-bg" cx="50" cy="50" r="45" />
+                                    <circle id="calRing" class="stat-ring-bar ring-calories" cx="50" cy="50" r="45"
+                                        stroke-dasharray="282.7" stroke-dashoffset="282.7" />
+                                </svg>
+                                <div class="stat-ring-info">
+                                    <i class="fas fa-fire"></i>
+                                    <h2 id="todayCalories">0</h2>
+                                </div>
+                            </div>
+                            <p id="calLabel">Calories Today</p>
+                            <small id="calTarget">Target: 2000</small>
+                        </div>
+                        <div class="stat-item vertical-card">
+                            <div class="stat-ring-container">
+                                <svg viewBox="0 0 100 100">
+                                    <circle class="stat-ring-bg" cx="50" cy="50" r="45" />
+                                    <circle id="waterRing" class="stat-ring-bar ring-water" cx="50" cy="50" r="45"
+                                        stroke-dasharray="282.7" stroke-dashoffset="282.7" />
+                                </svg>
+                                <div class="stat-ring-info">
+                                    <i class="fas fa-tint"></i>
+                                    <h2 id="todayWater">0</h2>
+                                </div>
+                            </div>
+                            <p id="waterLabel">Liters Today</p>
+                            <small id="waterTarget">Target: 3.5L</small>
+                        </div>
+                        <div class="stat-item vertical-card">
+                            <div class="stat-ring-container">
+                                <svg viewBox="0 0 100 100">
+                                    <circle class="stat-ring-bg" cx="50" cy="50" r="45" />
+                                    <circle id="sleepRing" class="stat-ring-bar ring-sleep" cx="50" cy="50" r="45"
+                                        stroke-dasharray="282.7" stroke-dashoffset="282.7" />
+                                </svg>
+                                <div class="stat-ring-info">
+                                    <i class="fas fa-moon"></i>
+                                    <h2 id="todaySleep">0</h2>
+                                </div>
+                            </div>
+                            <p id="sleepLabel">Hours Today</p>
+                            <small id="sleepTarget">Target: 8h</small>
+                        </div>
+                    </div>
+
+                    <!-- Performance UX: Instant Mini-Chart Redesign -->
+                    <div id="miniChartContainer" class="vertical-card chart-card mini-chart-redesign">
+                        <div class="mini-chart-header">
+                            <h3><i class="fas fa-chart-simple"></i> Activity Quick View</h3>
+                            <p id="miniChartLabel">Selected Date Progress</p>
+                        </div>
+                        <div class="mini-chart-canvas-wrapper" style="height: 250px; position: relative;">
+                            <canvas id="activityQuickChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Assigned Trainer Section -->
+                    <div id="assignedTrainerSection" style="margin-top: 30px;">
+                        <!-- Content will be loaded by JS -->
+                    </div>
+
+
+
+
+
+                    <div class="upcoming-classes">
+                        <h2>Upcoming Classes</h2>
+                        <div class="class-card">
+                            <div class="class-info">
+                                <h3>HIIT Training</h3>
+                                <p>Today, 5:00 PM with Sarah</p>
+                            </div>
+                            <button class="btn btn-outline">Join Now</button>
+                        </div>
+                        <div class="class-card">
+                            <div class="class-info">
+                                <h3>Yoga Flow</h3>
+                                <p>Tomorrow, 8:00 AM with Mike</p>
+                            </div>
+                            <button class="btn btn-outline">Book</button>
+                        </div>
+                    </div>
+
+                    <!-- Daily Weight Check-in -->
+                    <div class="weight-checkin-widget" style="margin-top: 30px;">
+                        <div class="vertical-card">
+                            <div class="dashboard-header"
+                                style="margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between;">
+                                <div>
+                                    <h2><i class="fas fa-weight"></i> Daily Check-in</h2>
+                                    <p>Log your weight for the selected date</p>
+                                </div>
+                            </div>
+
+                            <form class="checkin-controls" id="weightEntryFormNative">
+                                <div style="display: flex; gap: 15px; align-items: flex-end; flex-wrap: wrap;">
+                                    <div class="form-group" style="flex: 1; min-width: 150px; margin: 0;">
+                                        <label for="weightDate">Check-in Date</label>
+                                        <input type="date" id="weightDate" class="form-control checkin-input"
+                                            style="width: 100%;" required>
+                                    </div>
+                                    <div class="form-group" style="flex: 2; min-width: 200px; margin: 0;">
+                                        <label for="weightValue">Weight (kg)</label>
+                                        <div style="display: flex; gap: 10px;">
+                                            <input type="number" id="weightValue" step="0.1" min="20" max="300"
+                                                placeholder="Enter weight" class="form-control checkin-input"
+                                                style="flex: 1;" required>
+                                            <button type="submit" id="saveWeightBtn" class="btn"
+                                                style="background: #000; color: #fff; border: none; font-weight: 600; padding: 0 30px; border-radius: 4px;">
+                                                Save
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <!-- Summary View (Shown when weight exists) -->
+                            <div id="weightSummaryDisplay"
+                                style="display: none; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); padding: 20px; border-radius: 12px;">
+                                <div>
+                                    <div style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 5px;">Logged
+                                        Weight</div>
+                                    <div style="font-size: 1.8rem; font-weight: 700; color: #fff;"><span
+                                            id="displayWeightValue">0</span> <span
+                                            style="font-size: 1rem; color: var(--primary);">kg</span></div>
+                                </div>
+                                <div style="display: flex; gap: 10px;">
+                                    <button type="button" id="editWeightBtn" class="btn"
+                                        style="height: 48px; border-radius: 4px; padding: 0 20px; font-weight: 600; background: #000; color: #fff; border: none; transition: background 0.2s;">
+                                        Edit
+                                    </button>
+                                    <button type="button" id="viewWeightProgressBtn" class="btn"
+                                        style="height: 48px; border-radius: 4px; padding: 0 20px; font-weight: 600; background: #000; color: #fff; border: none; transition: background 0.2s;">
+                                        View Progress
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div id="weightStatus"
+                                style="margin-top: 15px; font-size: 0.95rem; display: flex; justify-content: space-between; align-items: center; display: none;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Daily Goals Tracker -->
+                    <div class="goals-tracker">
+                        <div class="dashboard-header" style="margin-bottom: 20px;">
+                            <h2>Daily Goals Tracker</h2>
+                            <p>Track your daily progress across 4 key areas.</p>
+                        </div>
+
+                        <!-- Date Navigator -->
+                        <div class="date-navigator" style="margin-bottom: 20px;">
+                            <button id="prevDayBtn" class="nav-btn">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <div class="date-display">
+                                <span id="currentDateLabel">Today</span>
+                            </div>
+                            <button id="nextDayBtn" class="nav-btn">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+
+                            <!-- Calendar Dropdown Wrapper -->
+                            <div class="calendar-dropdown-wrapper">
+                                <button id="calendarToggleBtn" class="calendar-toggle-btn">
+                                    <i class="fas fa-calendar-alt"></i> Calendar
+                                </button>
+                                <!-- Goal Completion Calendar (Dropdown) -->
+                                <div id="goalCalendar" class="goal-calendar">
+                                    <!-- Calendar will be rendered by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="goals-grid" id="dailyGoalsGrid">
+                            <!-- Dynamic Goals will be injected here by script.js -->
+                        </div>
+
+                        <!-- Empty State -->
+                        <div id="emptyGoalsState"
+                            style="display: none; text-align: center; padding: 40px; background: white; border-radius: 12px; margin-top: 10px;">
+                            <i class="fas fa-clipboard-list"
+                                style="font-size: 3rem; color: #eee; margin-bottom: 15px;"></i>
+                            <h3 style="color: var(--dark); margin-bottom: 5px;">No Active Goals</h3>
+                            <p style="color: var(--text-muted); font-size: 0.9rem;">Your trainer hasn't assigned any
+                                daily tasks
+                                yet.</p>
+                        </div>
+                    </div>
+
+                    <!-- Steps Tracker Section -->
+                    <!-- Goal Plan Section with Sub-Tabs -->
+                    <div class="goal-plan-container" style="margin-top: 30px;">
+                        <div class="sub-tabs-wrapper"
+                            style="display: flex; gap: 15px; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px;">
+                            <button class="sub-tab btn-tab active" onclick="switchMemberGoalTab('current', this)"
+                                style="background: transparent; border: none; color: #888; padding: 8px 15px; cursor: pointer; font-weight: 700; transition: all 0.3s ease; border-bottom: 2px solid transparent; display: flex; align-items: center; gap: 8px; font-size: 1rem;">
+                                <i class="fas fa-bullseye"></i> Current Plan
+                            </button>
+                            <button class="sub-tab btn-tab" onclick="switchMemberGoalTab('history', this)"
+                                style="background: transparent; border: none; color: #888; padding: 8px 15px; cursor: pointer; font-weight: 700; transition: all 0.3s ease; border-bottom: 2px solid transparent; display: flex; align-items: center; gap: 8px; font-size: 1rem;">
+                                <i class="fas fa-history"></i> Plan History
+                            </button>
+                        </div>
+
+                        <style>
+                            .sub-tab.active {
+                                color: var(--primary) !important;
+                                border-bottom-color: var(--primary) !important;
+                            }
+
+                            .sub-tab:hover {
+                                color: white !important;
+                            }
+                        </style>
+
+                        <div id="activeGoalTabContent" class="goal-tab-content">
+                            <!-- Premium Goal Progress Tracker -->
+                            <div class="goal-progress-card">
+                                <h3><i class="fas fa-bullseye"></i> Goal Progress Tracking</h3>
+                                <div class="goal-progress-layout">
+                                    <!-- Rings Section -->
+                                    <div class="progress-rings-wrapper">
+                                        <svg class="rings-svg" viewBox="0 0 100 100">
+                                            <!-- Background Rings -->
+                                            <circle class="ring-bg" cx="50" cy="50" r="45" />
+                                            <circle class="ring-bg" cx="50" cy="50" r="35" />
+                                            <circle class="ring-bg" cx="50" cy="50" r="25" />
+
+                                            <!-- Progress Bars -->
+                                            <circle id="ringOuter" class="ring-bar ring-outer" cx="50" cy="50" r="45"
+                                                stroke-dasharray="282.7" stroke-dashoffset="282.7" />
+                                            <circle id="ringMiddle" class="ring-bar ring-middle" cx="50" cy="50" r="35"
+                                                stroke-dasharray="219.9" stroke-dashoffset="219.9" />
+                                            <circle id="ringInner" class="ring-bar ring-inner" cx="50" cy="50" r="25"
+                                                stroke-dasharray="157.1" stroke-dashoffset="157.1" />
+                                        </svg>
+                                        <div class="rings-info">
+                                            <span id="mainProgressLabel" class="main-pct">0%</span>
+                                            <span class="main-label">Overall</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Status & Legend Section -->
+                                    <div class="goal-status-content">
+                                        <div class="status-header">
+                                            <span id="smartStatusLabel" class="smart-status">Calculating...</span>
+                                            <p id="planDatesRange"
+                                                style="font-size: 0.8rem; color: #888; margin-top: 8px;">Plan
+                                                Duration: --</p>
+                                        </div>
+
+                                        <div class="legend-grid">
+                                            <div class="legend-item">
+                                                <div class="legend-label-group">
+                                                    <div class="color-dot dot-blue"></div>
+                                                    <div class="legend-text">
+                                                        <h4>Active Plan Focus</h4>
+                                                        <p>Weight, Nutrition & Meals</p>
+                                                    </div>
+                                                </div>
+                                                <span id="outerPctText" class="legend-value">0%</span>
+                                            </div>
+                                            <div class="legend-item">
+                                                <div class="legend-label-group">
+                                                    <div class="color-dot dot-purple"></div>
+                                                    <div class="legend-text">
+                                                        <h4>Plan Adherence</h4>
+                                                        <p>Workouts & Exercises</p>
+                                                    </div>
+                                                </div>
+                                                <span id="middlePctText" class="legend-value">0%</span>
+                                            </div>
+                                            <div class="legend-item">
+                                                <div class="legend-label-group">
+                                                    <div class="color-dot dot-yellow"></div>
+                                                    <div class="legend-text">
+                                                        <h4>Overall Wellness</h4>
+                                                        <p>Habits, Sleep & Hydration</p>
+                                                    </div>
+                                                </div>
+                                                <span id="innerPctText" class="legend-value">0%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Timeline Section -->
+                                <div class="plan-timeline-wrapper">
+                                    <div class="timeline-header">
+                                        <h4>Plan Journey</h4>
+                                        <span id="dayCounterLabel" class="day-counter">Day 0 of 0</span>
+                                    </div>
+                                    <div id="planTimeline" class="glass-timeline">
+                                        <!-- Dots will be injected by JS -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="historyGoalTabContent" class="goal-tab-content" style="display: none;">
+                            <!-- Goal Plan History Section -->
+                            <div class="goal-history-wrapper">
+                                <div class="section-header">
+                                    <h4 style="margin: 0; display: flex; align-items: center; gap: 10px;">
+                                        <i class="fas fa-history" style="color: var(--primary);"></i>
+                                        Goal Plan History & Reviews
+                                    </h4>
+                                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 5px;">View your
+                                        past
+                                        plans
+                                        and
+                                        feedback.</p>
+                                </div>
+                                <div id="goalHistoryList" class="history-grid" style="margin-top: 20px;">
+                                    <!-- History items will be injected by JS -->
+                                    <div class="history-empty-state">
+                                        <p>Loading your history...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="report-action">
+                        <button id="downloadReportBtn" class="btn btn-primary btn-download">
+                            <i class="fas fa-file-pdf"></i> Download Daily Report
+                        </button>
+                    </div>
+                </div> <!-- End dashboard-main -->
+            </div> <!-- End dashboard-layout -->
+        </div>
+
+        <!-- Report Preview Modal (Hidden) -->
+        <div id="reportOverlay" class="report-overlay">
+            <div id="reportPreview" class="report-preview">
+                <div class="report-header">
+                    <div>
+                        <h2 style="color: #111; margin-bottom: 5px;">FITNESS SQUARE</h2>
+                        <p style="color: #666; font-size: 0.9rem;">Daily Fitness & Wellness Report</p>
+                    </div>
+                    <div style="text-align: right;">
+                        <p id="reportDate" style="font-weight: 700; color: #111;"></p>
+                        <p id="reportUser" style="color: #666; font-size: 0.9rem;"></p>
+                    </div>
+                </div>
+
+                <div class="report-content-grid" id="reportContent">
+                    <!-- Content will be injected by JS -->
+                </div>
+
+                <div
+                    style="border-top: 2px solid #eee; margin-top: 30px; padding-top: 20px; text-align: center; color: #888; font-size: 0.8rem;">
+                    This report was automatically generated by Fitness Square Platform.
+                </div>
+            </div>
+        </div>
+
+        <!-- External Libraries -->
+        <!-- Checklist Modal -->
+        <div id="checklistModal" class="checklist-modal-overlay">
+            <div class="checklist-modal">
+                <div class="checklist-modal-header">
+                    <h2><i class="fas fa-clipboard-list"></i> Daily Fitness Checklist</h2>
+                    <button id="closeChecklist" class="close-btn">&times;</button>
+                </div>
+                <div class="checklist-modal-content">
+                    <div class="checklist-grid">
+                        <!-- Dynamic Checklist Columns will be injected here by script.js -->
+                        <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #888;">
+                            <p>No goals assigned yet. Contact your trainer!</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="checklist-modal-footer">
+                    <p>Stay consistent, Stay disciplined!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Weight Progress Modal -->
+        <div id="weightProgressModal" class="checklist-modal-overlay">
+            <div class="checklist-modal"
+                style="max-width: 650px; background: linear-gradient(135deg, #1e2024 0%, #2b2d31 100%); border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; color: #ffffff; box-shadow: 0 25px 50px rgba(0,0,0,0.5), 0 0 40px rgba(200, 245, 96, 0.05);">
+                <div class="checklist-modal-header"
+                    style="border-bottom: 1px solid rgba(255,255,255,0.05); padding: 30px;">
+                    <h2
+                        style="font-size: 1.6rem; font-weight: 800; margin: 0; display: flex; align-items: center; gap: 12px; color: #ffffff; letter-spacing: -0.5px;">
+                        <i class="fas fa-chart-line"
+                            style="color: var(--primary); text-shadow: 0 0 15px rgba(200, 245, 96, 0.4);"></i> Weight
+                        Plan
+                        Effectiveness
+                    </h2>
+                    <button id="closeWeightProgress" class="close-btn"
+                        style="color: #ffffff; opacity: 0.7; font-size: 1.8rem;">&times;</button>
+                </div>
+                <div class="checklist-modal-content" style="padding: 25px;">
+                    <div id="effectivenessContent"
+                        style="padding: 30px; background: var(--dark-lighter); border-radius: 16px; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 150px;">
+                        <p style="color: var(--text-muted); text-align: center; font-size: 1.1rem;"><i
+                                class="fas fa-spinner fa-spin" style="margin-right: 10px;"></i> Analyzing progress...
+                        </p>
+                    </div>
+                    <!-- Weight Progress Graph Container -->
+                    <div class="chart-container"
+                        style="position: relative; height: 280px; width: 100%; margin-top: 25px; padding: 15px; background: var(--dark-lighter); border-radius: 16px; border: 1px solid rgba(255,255,255,0.02);">
+                        <canvas id="weightProgressChart"></canvas>
+                    </div>
+                </div>
+                <div class="checklist-modal-footer"
+                    style="background: rgba(0,0,0,0.2); border-top: 1px solid rgba(255,255,255,0.05); padding: 20px 25px;">
+                    <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0;"><i class="fas fa-info-circle"
+                            style="margin-right: 5px;"></i> Trends are calculated based on 7-day rolling averages to
+                        smooth
+                        out daily fluctuations.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Review Modal -->
+        <div id="reviewModal" class="report-overlay"
+            style="display: none; align-items: center; justify-content: center;">
+            <div class="report-preview" style="max-width: 450px; padding: 30px; border-radius: 20px;">
+                <div class="section-header" style="text-align: center; margin-bottom: 20px;">
+                    <h3 style="color: var(--white); margin-bottom: 10px;">How was your plan?</h3>
+                    <p style="color: var(--text-muted);">Your feedback helps your trainer improve your experience.</p>
+                </div>
+
+                <div class="rating-container"
+                    style="display: flex; justify-content: center; gap: 15px; margin-bottom: 25px;">
+                    <i class="far fa-star star-btn" data-rating="1"
+                        style="font-size: 2rem; color: #ffd700; cursor: pointer;"></i>
+                    <i class="far fa-star star-btn" data-rating="2"
+                        style="font-size: 2rem; color: #ffd700; cursor: pointer;"></i>
+                    <i class="far fa-star star-btn" data-rating="3"
+                        style="font-size: 2rem; color: #ffd700; cursor: pointer;"></i>
+                    <i class="far fa-star star-btn" data-rating="4"
+                        style="font-size: 2rem; color: #ffd700; cursor: pointer;"></i>
+                    <i class="far fa-star star-btn" data-rating="5"
+                        style="font-size: 2rem; color: #ffd700; cursor: pointer;"></i>
+                </div>
+
+                <textarea id="planReviewText"
+                    style="width: 100%; height: 120px; background: #fff; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #000; padding: 15px; margin-bottom: 20px; outline: none; transition: border-color 0.3s; font-size: 1.1rem;"
+                    placeholder="Write your review here..."></textarea>
+
+                <div class="modal-actions" style="display: flex; gap: 15px;">
+                    <button class="btn btn-secondary" onclick="closeReviewModal()" style="flex: 1;">Cancel</button>
+                    <button id="submitReviewBtn" class="btn btn-primary" style="flex: 1;">Submit Review</button>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+        <script src="script.js?v=1.1"></script>
+        <script>
+            // Initialize goal calendar when dashboard loads
+            document.addEventListener('DOMContentLoaded', () => {
+                // Wait for script.js to load and define the function
+                setTimeout(() => {
+                    if (typeof initGoalCalendar === 'function') {
+                        initGoalCalendar();
+                    }
+                }, 500);
+            });
+        </script>
+</body>
+
+</html>

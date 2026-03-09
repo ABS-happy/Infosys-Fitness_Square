@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Body Fat Calculator | Fitness Square</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="calculator-page">
+    <header id="header">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <img src="logo.png" alt="Fitness Square Logo" class="logo-img">
+                FITNESS <span>SQUARE</span>
+            </a>
+            <nav class="nav-links">
+                <div class="nav-item has-dropdown">
+                    <a href="#" class="nav-link">Tracker</a>
+                    <i class="fas fa-chevron-down"></i>
+                    <div class="dropdown-menu">
+                        <a href="workout-tracker.html" class="dropdown-item"><i class="fas fa-dumbbell"></i> Workout</a>
+                        <a href="sleep-tracker.html" class="dropdown-item"><i class="fas fa-moon"></i> Sleep</a>
+                        <a href="water-tracker.html" class="dropdown-item"><i class="fas fa-tint"></i> Water</a>
+                        <a href="meal-tracker.html" class="dropdown-item"><i class="fas fa-utensils"></i> Meal</a>
+                    </div>
+                </div>
+                <div class="nav-item has-dropdown">
+                    <a href="#" class="nav-link active">Calculator</a>
+                    <i class="fas fa-chevron-down"></i>
+                    <div class="dropdown-menu dropdown-menu-wide">
+                        <a href="bmi-calculator.html" class="dropdown-item"><i class="fas fa-weight"></i> BMI
+                            Calculator</a>
+                        <a href="calorie-calculator.html" class="dropdown-item"><i class="fas fa-fire"></i> Calorie
+                            Calculator</a>
+                        <a href="bodyfat-calculator.html" class="dropdown-item active"><i class="fas fa-percentage"></i>
+                            Body Fat Calculator</a>
+                        <a href="deficit-calculator.html" class="dropdown-item"><i class="fas fa-chart-line"></i>
+                            Calorie Deficit</a>
+                        <a href="hydration-calculator.html" class="dropdown-item"><i class="fas fa-heartbeat"></i>
+                            Hydration Calculator</a>
+                    </div>
+                </div>
+                <div class="nav-separator"></div>
+                <a href="login.html" id="navLogin" class="login-link"><i class="far fa-user"></i> LOGIN</a>
+                <a href="login.html" id="navAction" class="btn btn-primary">Get a Demo</a>
+            </nav>
+            <div class="hamburger"><i class="fas fa-bars"></i></div>
+        </div>
+    </header>
+
+    <section class="calculator-section">
+        <div class="container">
+            <div class="calculator-header">
+                <h1><i class="fas fa-percentage"></i> Body Fat <span>Calculator</span></h1>
+                <p>Estimate your body fat percentage using the U.S. Navy method</p>
+            </div>
+
+            <div class="calculator-container">
+                <div class="calculator-card">
+                    <div class="calc-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="gender">Gender</label>
+                                <select id="gender" onchange="toggleHipField()">
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="height">Height (cm)</label>
+                                <input type="number" id="height" placeholder="e.g., 175" min="50" max="300">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="waist">Waist (cm)</label>
+                                <input type="number" id="waist" placeholder="At navel level" min="30" max="200">
+                            </div>
+                            <div class="form-group">
+                                <label for="neck">Neck (cm)</label>
+                                <input type="number" id="neck" placeholder="Below larynx" min="20" max="80">
+                            </div>
+                        </div>
+                        <div class="form-row" id="hipRow" style="display: none;">
+                            <div class="form-group full">
+                                <label for="hip">Hip (cm) - For Females</label>
+                                <input type="number" id="hip" placeholder="At widest point" min="50" max="200">
+                            </div>
+                        </div>
+                        <button class="btn btn-primary btn-block" onclick="calculateBodyFat()">
+                            <i class="fas fa-calculator"></i> Calculate Body Fat
+                        </button>
+                    </div>
+
+                    <div class="calc-result" id="bodyFatResult" style="display: none;">
+                        <div class="result-value large">
+                            <span class="value" id="bfValue">0.0</span>
+                            <span class="label">% Body Fat</span>
+                        </div>
+                        <div class="result-category" id="bfCategory">
+                            <span class="category-badge" id="bfBadge">Fitness</span>
+                            <p class="category-desc" id="bfDesc"></p>
+                        </div>
+                        <div class="body-comp">
+                            <div class="comp-item">
+                                <span class="comp-label">Fat Mass</span>
+                                <span class="comp-value" id="fatMass">0 kg</span>
+                            </div>
+                            <div class="comp-item">
+                                <span class="comp-label">Lean Mass</span>
+                                <span class="comp-value" id="leanMass">0 kg</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3><i class="fas fa-info-circle"></i> Body Fat Categories</h3>
+                    <div class="bf-table">
+                        <div class="bf-row header">
+                            <span>Category</span>
+                            <span>Men</span>
+                            <span>Women</span>
+                        </div>
+                        <div class="bf-row">
+                            <span>Essential</span>
+                            <span>2-5%</span>
+                            <span>10-13%</span>
+                        </div>
+                        <div class="bf-row">
+                            <span>Athletes</span>
+                            <span>6-13%</span>
+                            <span>14-20%</span>
+                        </div>
+                        <div class="bf-row">
+                            <span>Fitness</span>
+                            <span>14-17%</span>
+                            <span>21-24%</span>
+                        </div>
+                        <div class="bf-row">
+                            <span>Average</span>
+                            <span>18-24%</span>
+                            <span>25-31%</span>
+                        </div>
+                        <div class="bf-row">
+                            <span>Obese</span>
+                            <span>25%+</span>
+                            <span>32%+</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function toggleHipField() {
+            const gender = document.getElementById('gender').value;
+            document.getElementById('hipRow').style.display = gender === 'female' ? 'flex' : 'none';
+        }
+
+        function calculateBodyFat() {
+            const gender = document.getElementById('gender').value;
+            const height = parseFloat(document.getElementById('height').value);
+            const waist = parseFloat(document.getElementById('waist').value);
+            const neck = parseFloat(document.getElementById('neck').value);
+            const hip = parseFloat(document.getElementById('hip').value) || 0;
+
+            if (!height || !waist || !neck || (gender === 'female' && !hip)) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            let bodyFat;
+            if (gender === 'male') {
+                bodyFat = 495 / (1.0324 - 0.19077 * Math.log10(waist - neck) + 0.15456 * Math.log10(height)) - 450;
+            } else {
+                bodyFat = 495 / (1.29579 - 0.35004 * Math.log10(waist + hip - neck) + 0.22100 * Math.log10(height)) - 450;
+            }
+
+            bodyFat = Math.max(0, Math.min(60, bodyFat));
+            const bfRounded = bodyFat.toFixed(1);
+
+            document.getElementById('bfValue').textContent = bfRounded;
+            document.getElementById('bodyFatResult').style.display = 'block';
+
+            // Determine category
+            let category, categoryClass, desc;
+            if (gender === 'male') {
+                if (bodyFat < 6) { category = 'Essential'; categoryClass = 'essential'; desc = 'Minimum body fat for survival.'; }
+                else if (bodyFat < 14) { category = 'Athlete'; categoryClass = 'athlete'; desc = 'Excellent! Typical for competitive athletes.'; }
+                else if (bodyFat < 18) { category = 'Fitness'; categoryClass = 'fitness'; desc = 'Great! Lean and fit physique.'; }
+                else if (bodyFat < 25) { category = 'Average'; categoryClass = 'average'; desc = 'Normal range for healthy adults.'; }
+                else { category = 'Obese'; categoryClass = 'obese'; desc = 'Consider reducing body fat for better health.'; }
+            } else {
+                if (bodyFat < 14) { category = 'Essential'; categoryClass = 'essential'; desc = 'Minimum body fat for women.'; }
+                else if (bodyFat < 21) { category = 'Athlete'; categoryClass = 'athlete'; desc = 'Excellent! Typical for competitive athletes.'; }
+                else if (bodyFat < 25) { category = 'Fitness'; categoryClass = 'fitness'; desc = 'Great! Lean and fit physique.'; }
+                else if (bodyFat < 32) { category = 'Average'; categoryClass = 'average'; desc = 'Normal range for healthy adults.'; }
+                else { category = 'Obese'; categoryClass = 'obese'; desc = 'Consider reducing body fat for better health.'; }
+            }
+
+            document.getElementById('bfBadge').textContent = category;
+            document.getElementById('bfBadge').className = 'category-badge ' + categoryClass;
+            document.getElementById('bfDesc').textContent = desc;
+        }
+    </script>
+</body>
+
+</html>

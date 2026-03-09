@@ -1,0 +1,340 @@
+/* Blog Module Styles */
+
+:root {
+    --blog-primary: #FFCC00;
+    --blog-secondary: #ccaa00;
+    --blog-dark: var(--dark);
+    --blog-card-bg: var(--dark-grey);
+    --text-color: var(--white);
+    --text-muted: #a0a0a0;
+}
+
+body.blog-page {
+    background-color: #121212;
+    color: var(--text-color);
+    font-family: 'Montserrat', sans-serif;
+}
+
+.blog-container {
+    max-width: 1200px;
+    margin: 100px auto 40px;
+    padding: 0 20px;
+}
+
+.blog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.blog-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--text-color);
+}
+
+.blog-title span {
+    color: var(--blog-secondary);
+}
+
+.btn-create-post {
+    background: linear-gradient(135deg, #FFCC00 0%, #ccaa00 100%);
+    color: var(--dark);
+    padding: 12px 24px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: transform 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-create-post:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 204, 0, 0.4);
+}
+
+/* Tab Navigation */
+.blog-tabs {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 10px;
+}
+
+.blog-tab {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 10px 20px;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+}
+
+.blog-tab:hover {
+    color: var(--text-color);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.blog-tab.active {
+    color: var(--blog-secondary);
+    background: rgba(255, 204, 0, 0.1);
+    border-bottom: 3px solid var(--blog-secondary);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+/* Blog Grid */
+.blog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.blog-card {
+    background: var(--blog-card-bg);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    flex-direction: column;
+}
+
+.blog-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border-color: var(--blog-secondary);
+}
+
+.blog-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    background-color: #333;
+}
+
+.blog-content {
+    padding: 20px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.blog-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+}
+
+.author-role {
+    background: rgba(255, 204, 0, 0.2);
+    color: #FFCC00;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.author-role.trainer {
+    background: rgba(204, 170, 0, 0.2);
+    color: #ccaa00;
+}
+
+.author-role.admin {
+    background: rgba(255, 215, 0, 0.2);
+    color: #ffd700;
+}
+
+.blog-card-title {
+    font-size: 1.25rem;
+    margin: 10px 0;
+    color: var(--text-color);
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.blog-snippet {
+    font-size: 0.95rem;
+    color: #ccc;
+    margin-bottom: 20px;
+    flex-grow: 1;
+    line-height: 1.6;
+}
+
+.blog-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 15px;
+    margin-top: auto;
+}
+
+.blog-stats {
+    display: flex;
+    gap: 15px;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.stat-item i {
+    margin-right: 5px;
+}
+
+.btn-read-more {
+    color: var(--blog-secondary);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: color 0.3s;
+}
+
+.btn-read-more:hover {
+    color: #fff;
+}
+
+/* Create Post Form */
+.create-post-form {
+    background: var(--blog-card-bg);
+    padding: 40px;
+    border-radius: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: white;
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--blog-secondary);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+textarea.form-control {
+    min-height: 200px;
+    resize: vertical;
+}
+
+/* Post Details */
+.post-detail-header {
+    margin-bottom: 30px;
+}
+
+.post-detail-title {
+    font-size: 3rem;
+    margin-bottom: 15px;
+}
+
+.post-detail-meta {
+    display: flex;
+    gap: 20px;
+    color: var(--text-muted);
+    font-size: 1rem;
+    align-items: center;
+}
+
+.post-body {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #ddd;
+    margin-bottom: 50px;
+    white-space: pre-wrap;
+}
+
+
+/* Moderation Dashboard */
+.moderation-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: var(--blog-card-bg);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.moderation-table th,
+.moderation-table td {
+    padding: 15px 20px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.moderation-table th {
+    background: rgba(0, 0, 0, 0.3);
+    color: var(--blog-secondary);
+    font-weight: 600;
+}
+
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.status-pending {
+    background: rgba(255, 165, 0, 0.2);
+    color: orange;
+}
+
+.status-published {
+    background: rgba(204, 170, 0, 0.2);
+    color: #ccaa00;
+}
+
+.status-rejected {
+    background: rgba(255, 204, 0, 0.2);
+    color: #FFCC00;
+}
+
+.action-btn {
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    margin-right: 5px;
+    font-weight: 600;
+}
+
+.btn-approve {
+    background: #FFCC00;
+    color: black;
+}
+
+.btn-reject {
+    background: #ccaa00;
+    color: black;
+}
+
+.btn-view {
+    background: #444;
+    color: white;
+}

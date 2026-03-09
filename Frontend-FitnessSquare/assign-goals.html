@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assign Member Goals - Fitness Square</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --primary: #FFCC00;
+            --primary-dark: #ccaa00;
+            --bg-dark: #0a0a0a;
+            --card-bg: rgba(255, 255, 255, 0.02);
+            --border: rgba(255, 255, 255, 0.08);
+            --glass: rgba(18, 18, 18, 0.9);
+            --text-main: #ffffff;
+            --text-muted: #888888;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-main);
+            margin: 0;
+            min-height: 100vh;
+            padding-top: 55px;
+            letter-spacing: -0.01em;
+        }
+
+        header {
+            padding: 10px 0 !important;
+        }
+
+        .vertical-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 35px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 20px auto;
+            padding: 0 40px;
+        }
+
+        .page-header {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-header h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin: 0;
+            letter-spacing: -0.04em;
+        }
+
+        .planner-grid {
+            display: grid;
+            grid-template-columns: 1fr 440px;
+            gap: 40px;
+        }
+
+        .stats-summary {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .stat-badge {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 100px;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+        }
+
+        .section-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: #fff;
+            font-family: inherit;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.95rem;
+            font-weight: 500;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        select.form-control {
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23888888'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 18px center;
+            background-size: 16px;
+            padding-right: 45px;
+        }
+
+        select.form-control option {
+            background-color: #1a1a1a;
+            color: #fff;
+            padding: 12px;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 4px rgba(255, 204, 0, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .label-sm {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            display: block;
+            letter-spacing: 0.02em;
+        }
+
+        .category-badge {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            background: rgba(255, 255, 255, 0.05);
+            color: #eee;
+            padding: 4px 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            display: inline-block;
+            letter-spacing: 0.05em;
+        }
+
+        .goal-item {
+            background: rgba(255, 255, 255, 0.015);
+            border: 1px solid var(--border);
+            padding: 24px;
+            border-radius: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s ease;
+            margin-bottom: 15px;
+        }
+
+        .goal-item:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .goal-content h4 {
+            margin: 0;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #fff;
+            letter-spacing: -0.01em;
+        }
+
+        .trash-btn {
+            color: #ff4d4d;
+            background: rgba(255, 77, 77, 0.08);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .trash-btn:hover {
+            background: #ff4d4d;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #000;
+            font-weight: 700;
+            padding: 18px 32px;
+            border-radius: 16px;
+            font-size: 1.05rem;
+            letter-spacing: -0.01em;
+            transition: all 0.2s ease;
+            box-shadow: 0 8px 24px rgba(255, 204, 0, 0.15);
+        }
+
+        .btn-primary:hover {
+            background: #ffe066;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(255, 204, 0, 0.2);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #444;
+            border: 2px dashed rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        /* Automate display styles */
+        .member-profile-info {
+            background: rgba(255, 204, 0, 0.03);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 204, 0, 0.1);
+        }
+
+        .member-tag {
+            background: var(--primary);
+            color: #000;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 800;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 1050px) {
+            .planner-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header id="header">
+        <div class="container nav-container">
+            <a href="trainer-dashboard.html" class="logo" style="gap: 8px;">
+                <img src="logo.png" alt="FS" class="logo-img" style="height: 24px;">
+                FITNESS <span style="font-size: 0.9rem;">SQUARE</span>
+            </a>
+            <nav class="nav-links">
+                <a href="trainer-dashboard.html" class="btn btn-outline"
+                    style="padding: 8px 16px; border-radius: 10px; font-size: 0.85rem;">
+                    Back to Dashboard
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="page-header">
+            <div>
+                <h1>Goal Planner</h1>
+                <p style="color: var(--text-muted); margin-top: 5px;">Curate daily habits and track assigned plans for
+                    your members.</p>
+            </div>
+            <div id="activeMember" style="text-align: right;">
+                <label class="label-sm">PLANNING FOR</label>
+                <div id="currentMemberName" style="font-weight: 700; color: var(--primary); font-size: 1.4rem;">-</div>
+            </div>
+        </div>
+
+        <div class="planner-grid">
+            <div class="main-column">
+                <div class="vertical-card">
+                    <div class="section-title">Configuration</div>
+
+                    <div id="memberProfileInfo" class="member-profile-info" style="display: none;">
+                        <span class="member-tag">Profile Goal</span>
+                        <div id="memberPrimaryGoal" style="font-size: 1.1rem; font-weight: 700; margin-top: 8px;">Weight
+                            Loss</div>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin: 5px 0 0 0;">System has
+                            automatically matched the recommendation plan.</p>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                        <div class="form-group">
+                            <label class="label-sm">SELECT MEMBER</label>
+                            <select id="goalMember" class="form-control" onchange="updateMemberSelection()"></select>
+                        </div>
+                        <div class="form-group">
+                            <label class="label-sm">PLAN RECOMMENDATION</label>
+                            <select id="fitnessFocus" class="form-control" onchange="applyRecommendations()">
+                                <option value="">-- Custom Plan --</option>
+                                <option value="Weight Loss">Weight Loss</option>
+                                <option value="Muscle Gain">Muscle Gain</option>
+                                <option value="Athletic Performance">Athletic Performance</option>
+                                <option value="Endurance Focus">Endurance Focus</option>
+                                <option value="Stress & Recovery">Stress & Recovery</option>
+                                <option value="Weight Maintenance">Weight Maintenance</option>
+                                <option value="General Health">General Health</option>
+                                <option value="Injury Recovery">Injury Recovery</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 40px;">
+                        <div class="form-group">
+                            <label class="label-sm">START DATE</label>
+                            <input type="date" id="startDate" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="label-sm">END DATE</label>
+                            <input type="date" id="endDate" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="section-title">Add Custom Task</div>
+                    <div style="display: grid; grid-template-columns: 180px 1fr 120px; gap: 15px; margin-bottom: 50px;">
+                        <select id="goalCategory" class="form-control">
+                            <option value="Workout">Workout</option>
+                            <option value="Meal">Meal</option>
+                            <option value="Hydration">Hydration</option>
+                            <option value="Sleep">Sleep</option>
+                            <option value="Habit">Habit</option>
+                            <option value="Goal">Goal (Weight/Target)</option>
+                        </select>
+                        <input type="text" id="goalDescription" class="form-control"
+                            placeholder="Describe the daily task...">
+                        <button class="btn btn-primary" onclick="addCustomGoal()"
+                            style="padding: 0; display: flex; align-items: center; justify-content: center;">Add</button>
+                    </div>
+
+                    <div class="section-title">Draft Plan</div>
+                    <div id="tasksList">
+                        <div class="empty-state">No tasks added to the new plan.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="preview-pane">
+                <div class="vertical-card" style="padding-bottom: 40px;">
+                    <div class="section-title">Actions</div>
+                    <button id="submitBtn" class="btn btn-primary" style="width: 100%;" onclick="submitGoalPlan()">
+                        Assign New Plan
+                    </button>
+                    <p
+                        style="font-size: 0.8rem; color: var(--text-muted); text-align: center; margin-top: 20px; line-height: 1.5;">
+                        This will override the current daily goals with this new set of habits.
+                    </p>
+                </div>
+
+                <div class="vertical-card">
+                    <div class="section-title">Active Goals</div>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 25px;">Currently assigned
+                        tasks for this member.</p>
+                    <div id="activeGoalsList">
+                        <div class="empty-state">Select a member to view active goals.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const token = localStorage.getItem('token');
+        if (!token) window.location.href = 'login.html';
+
+        let draftGoals = [];
+        let allClients = [];
+
+        const goalRecommendations = {
+            "Weight Loss": [
+                { category: "Goal", taskDescription: "Track daily morning weight" },
+                { category: "Workout", taskDescription: "45 min Cardio (Walking/Running)" },
+                { category: "Workout", taskDescription: "12,000 Total daily steps" },
+                { category: "Meal", taskDescription: "Eat 1800 kcal (Calorie Deficit)" },
+                { category: "Meal", taskDescription: "High fiber: 25g+ today" },
+                { category: "Hydration", taskDescription: "Drink 3.5L Water" },
+                { category: "Sleep", taskDescription: "Sleep 7+ Hours" },
+                { category: "Habit", taskDescription: "No snacking after 8 PM" }
+            ],
+            "Muscle Gain": [
+                { category: "Goal", taskDescription: "Hit daily protein target (160g+)" },
+                { category: "Workout", taskDescription: "Progressive Resistance Training" },
+                { category: "Workout", taskDescription: "Compound lifts (Squat/Deadlift/Bench)" },
+                { category: "Meal", taskDescription: "Eat 3000 kcal (Caloric Surplus)" },
+                { category: "Hydration", taskDescription: "Drink 4L Water" },
+                { category: "Sleep", taskDescription: "Sleep 8+ Hours" },
+                { category: "Habit", taskDescription: "Post-workout recovery stretching" }
+            ],
+            "Athletic Performance": [
+                { category: "Goal", taskDescription: "Complete plyometric circuit" },
+                { category: "Workout", taskDescription: "HIIT or Explosivity Drills (30 min)" },
+                { category: "Workout", taskDescription: "Agility/Mobility routine" },
+                { category: "Meal", taskDescription: "Proper Pre/Post workout fueling" },
+                { category: "Meal", taskDescription: "Complex carbohydrates focus" },
+                { category: "Hydration", taskDescription: "Drink 3L Water + Electrolytes" },
+                { category: "Sleep", taskDescription: "Sleep 9+ Hours" },
+                { category: "Habit", taskDescription: "Mental visualization/Game prep" }
+            ],
+            "Endurance Focus": [
+                { category: "Goal", taskDescription: "Maintain Zone 2 heart rate" },
+                { category: "Workout", taskDescription: "Cardio 60 min (Steady State)" },
+                { category: "Workout", taskDescription: "Zone 2 specific training" },
+                { category: "Meal", taskDescription: "Eat 2500 kcal (Fueling)" },
+                { category: "Hydration", taskDescription: "Drink 3L Water" },
+                { category: "Sleep", taskDescription: "Sleep 8+ Hours" },
+                { category: "Habit", taskDescription: "Iron/Vitamin B levels check-in" }
+            ],
+            "Stress & Recovery": [
+                { category: "Goal", taskDescription: "Complete 10 min mindfulness" },
+                { category: "Workout", taskDescription: "Yoga or Mobility (30 min)" },
+                { category: "Workout", taskDescription: "LISS (Light walking in nature)" },
+                { category: "Meal", taskDescription: "Anti-inflammatory food focus" },
+                { category: "Meal", taskDescription: "Omega-3 rich foods" },
+                { category: "Hydration", taskDescription: "Drink 2.5L Water" },
+                { category: "Sleep", taskDescription: "Sleep 8.5+ Hours" },
+                { category: "Habit", taskDescription: "Digital detox 1h before bed" }
+            ],
+            "Weight Maintenance": [
+                { category: "Goal", taskDescription: "Log all meals in tracker" },
+                { category: "Workout", taskDescription: "Active movement (45 min)" },
+                { category: "Meal", taskDescription: "Eat 2000 kcal (Maintenance)" },
+                { category: "Meal", taskDescription: "Balanced macros (40/30/30)" },
+                { category: "Hydration", taskDescription: "Drink 3L Water" },
+                { category: "Sleep", taskDescription: "Sleep 7+ Hours" },
+                { category: "Habit", taskDescription: "Weekly weight/measurement check" }
+            ],
+            "General Health": [
+                { category: "Goal", taskDescription: "Close all activity rings" },
+                { category: "Workout", taskDescription: "10,000 Steps daily activity" },
+                { category: "Workout", taskDescription: "Moderate physical play/sport" },
+                { category: "Meal", taskDescription: "3 Balanced whole-food meals" },
+                { category: "Meal", taskDescription: "No processed sugars" },
+                { category: "Hydration", taskDescription: "Drink 3L Water" },
+                { category: "Sleep", taskDescription: "Sleep 7.5+ Hours" },
+                { category: "Habit", taskDescription: "Daily gratitude/Mindfulness" }
+            ],
+            "Injury Recovery": [
+                { category: "Goal", taskDescription: "Perform specific rehabilitation exercises" },
+                { category: "Workout", taskDescription: "Prescribed PT/Mobility Work" },
+                { category: "Workout", taskDescription: "Low-impact joint movement" },
+                { category: "Meal", taskDescription: "Collagen & Protein focus" },
+                { category: "Meal", taskDescription: "Hydration: Maximize cell recovery" },
+                { category: "Sleep", taskDescription: "Sleep 9+ Hours" },
+                { category: "Habit", taskDescription: "Apply therapy (Heat/Ice) as needed" }
+            ]
+        };
+
+        async function init() {
+            try {
+                const response = await fetch('/api/trainer/assigned-users', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (response.ok) {
+                    allClients = await response.json();
+                    const select = document.getElementById('goalMember');
+                    select.innerHTML = allClients.map(c => `<option value="${c.id}">${c.fullname}</option>`).join('');
+
+                    // Prioritize Query Parameter, then fallback to LocalStorage
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const paramId = urlParams.get('clientId');
+                    const storageId = localStorage.getItem('selectedClientId');
+
+                    const targetId = paramId || storageId;
+                    if (targetId) select.value = targetId;
+
+                    updateMemberSelection();
+                }
+            } catch (err) { console.error('Error loading clients:', err); }
+        }
+
+        function updateMemberSelection() {
+            const select = document.getElementById('goalMember');
+            const clientId = select.value;
+            const client = allClients.find(c => c.id == clientId);
+
+            if (client) {
+                document.getElementById('currentMemberName').innerText = client.fullname;
+                localStorage.setItem('selectedClientId', clientId);
+
+                // Automate Goal Display
+                const profileInfo = document.getElementById('memberProfileInfo');
+                const primaryGoal = document.getElementById('memberPrimaryGoal');
+                const focusSelect = document.getElementById('fitnessFocus');
+
+                if (client.primaryGoal) {
+                    profileInfo.style.display = 'block';
+                    primaryGoal.innerText = client.primaryGoal;
+
+                    // Auto-select focus if match found
+                    if (goalRecommendations[client.primaryGoal]) {
+                        focusSelect.value = client.primaryGoal;
+                        applyRecommendations();
+                    } else {
+                        focusSelect.value = "";
+                        draftGoals = [];
+                        renderDraftList();
+                    }
+                } else {
+                    profileInfo.style.display = 'none';
+                    focusSelect.value = "";
+                    draftGoals = [];
+                    renderDraftList();
+                }
+
+                loadActiveGoals(clientId);
+            }
+        }
+
+        async function loadActiveGoals(memberId) {
+            if (!memberId) return;
+            const container = document.getElementById('activeGoalsList');
+            container.innerHTML = '<div class="empty-state" style="border:none;">Loading assigned goals...</div>';
+
+            try {
+                const res = await fetch(`/api/trainer/members/${memberId}/goals`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    const goals = await res.json();
+                    if (goals.length === 0) {
+                        container.innerHTML = '<div class="empty-state">No goals currently assigned.</div>';
+                    } else {
+                        // Extract and display dates
+                        let dateRangeHtml = '';
+                        const firstGoal = goals[0];
+                        if (firstGoal.startDate && firstGoal.endDate) {
+                            const start = new Date(firstGoal.startDate).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' });
+                            const end = new Date(firstGoal.endDate).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' });
+                            dateRangeHtml = `
+                                <div style="margin-bottom: 20px; padding: 15px; background: rgba(232, 255, 0, 0.05); border-radius: 12px; border: 1px dashed var(--primary); color: #ccc; font-size: 0.85rem; display: flex; align-items: center; gap: 10px;">
+                                    <i class="fas fa-calendar-alt" style="color: var(--primary);"></i>
+                                    <span>Active Plan Duration: <strong>${start}</strong> &mdash; <strong>${end}</strong></span>
+                                </div>`;
+                        }
+
+                        container.innerHTML = dateRangeHtml + goals.map(g => `
+                            <div class="goal-item" style="padding: 18px; border-radius: 14px;">
+                                <div style="flex: 1;">
+                                    <span class="category-badge" style="font-size: 0.6rem;">${g.category}</span>
+                                    <div style="font-size: 0.95rem; font-weight: 500;">${g.taskDescription}</div>
+                                </div>
+                                <button class="trash-btn" style="width: 32px; height: 32px; border-radius: 8px;" onclick="deleteActiveGoal('${g.id}')">
+                                    <i class="fas fa-trash-alt" style="font-size: 0.8rem;"></i>
+                                </button>
+                            </div>
+                        `).join('');
+                    }
+                } else {
+                    const errTxt = await res.text();
+                    container.innerHTML = `<div class="empty-state" style="color:#ff5555;">Error: ${errTxt || 'Failed to fetch goals'}</div>`;
+                }
+            } catch (err) {
+                console.error('Error loading goals:', err);
+                container.innerHTML = '<div class="empty-state" style="color:#ff5555;">Failed to load goals. Check connection.</div>';
+            }
+        }
+
+        async function deleteActiveGoal(goalId) {
+            if (!confirm('Permanently delete this goal?')) return;
+            try {
+                const res = await fetch(`/api/trainer/goals/${goalId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    alert('Goal deleted successfully.');
+                    loadActiveGoals(document.getElementById('goalMember').value);
+                } else {
+                    const errorText = await res.text();
+                    alert('Failed to delete goal: ' + (errorText || res.statusText));
+                }
+            } catch (err) {
+                console.error('Error deleting goal:', err);
+                alert('An error occurred while deleting the goal.');
+            }
+        }
+
+        function applyRecommendations() {
+            const focus = document.getElementById('fitnessFocus').value;
+            if (!focus) { draftGoals = []; renderDraftList(); return; }
+            draftGoals = JSON.parse(JSON.stringify(goalRecommendations[focus]));
+            renderDraftList();
+        }
+
+        function addCustomGoal() {
+            const category = document.getElementById('goalCategory').value;
+            const taskDescription = document.getElementById('goalDescription').value.trim();
+            if (!taskDescription) return;
+
+            draftGoals.push({ category, taskDescription });
+            document.getElementById('goalDescription').value = '';
+            renderDraftList();
+        }
+
+        function removeDraftGoal(index) {
+            draftGoals.splice(index, 1);
+            renderDraftList();
+        }
+
+        function renderDraftList() {
+            const list = document.getElementById('tasksList');
+            if (draftGoals.length === 0) {
+                list.innerHTML = '<div class="empty-state">No tasks in new plan.</div>';
+                return;
+            }
+            list.innerHTML = draftGoals.map((g, i) => `
+                <div class="goal-item" style="border-left: 3px solid var(--primary);">
+                    <div style="flex: 1;">
+                        <span class="category-badge">${g.category}</span>
+                        <div style="font-weight: 600; color: #fff; font-size: 1rem;">${g.taskDescription}</div>
+                    </div>
+                    <button class="trash-btn" onclick="removeDraftGoal(${i})">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        async function submitGoalPlan() {
+            const memberId = document.getElementById('goalMember').value;
+            const btn = document.getElementById('submitBtn');
+
+            if (draftGoals.length === 0) { alert('Add at least one task.'); return; }
+
+            btn.disabled = true;
+            btn.innerHTML = 'Assigning...';
+
+            const payload = {
+                startDate: document.getElementById('startDate').value,
+                endDate: document.getElementById('endDate').value,
+                goals: draftGoals
+            };
+
+            try {
+                const res = await fetch(`/api/trainer/members/${memberId}/bulk-goals`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (res.ok) {
+                    alert('Plan assigned!');
+                    draftGoals = [];
+                    renderDraftList();
+                    loadActiveGoals(memberId);
+                } else {
+                    const err = await res.json();
+                    alert('Error: ' + (err.message || 'Failed to assign'));
+                }
+            } catch (err) { alert('Connection error.'); }
+            finally {
+                btn.disabled = false;
+                btn.innerHTML = 'Assign New Plan';
+            }
+        }
+
+        init();
+    </script>
+</body>
+
+</html>

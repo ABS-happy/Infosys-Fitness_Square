@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Fitness Square</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Identity Services -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+
+<body class="login-page">
+
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <a href="index.html" class="logo">
+                    <img src="logo.png" alt="Fitness Square Logo" class="logo-img">
+                    FITNESS <span>SQUARE</span>
+                </a>
+                <h2>Login</h2>
+            </div>
+
+            <div class="role-selection" id="roleSelection">
+                <div class="role-tab active" data-role="member">Member</div>
+                <div class="role-tab" data-role="trainer">Trainer</div>
+                <div class="role-tab" data-role="admin">Admin</div>
+            </div>
+
+            <div class="form-message" id="formMessage"></div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="Enter your email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-icon">
+                        <input type="password" id="password" placeholder="Enter your password" required>
+                        <i class="fas fa-eye toggle-password" id="togglePassword" data-target="password"></i>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <label class="checkbox-container">
+                        <input type="checkbox"> Remember me
+                        <span class="checkmark"></span>
+                    </label>
+                    <a href="#" class="forgot-password">Forgot Password?</a>
+                </div>
+
+                <div id="verificationContainer"
+                    style="display: none; margin-top: 20px; padding: 20px; border: 1px dashed var(--primary); border-radius: 8px; background: rgba(255, 204, 0, 0.05);">
+                    <div class="form-group">
+                        <label for="otp">Enter OTP sent to your email</label>
+                        <input type="text" id="otp" placeholder="Enter 6-digit OTP" maxlength="6">
+                    </div>
+                    <button type="button" id="verifyOtpBtn" class="btn btn-outline btn-block"
+                        style="margin-bottom: 10px;">Verify & Login</button>
+                    <div style="text-align: center;">
+                        <a href="#" id="resendOtpBtn"
+                            style="color: var(--primary); font-size: 0.85rem; font-weight: 600;">Didn't receive code?
+                            Resend OTP</a>
+                    </div>
+                </div>
+
+                <button type="submit" id="signInBtn" class="btn btn-primary btn-block">Sign In</button>
+            </form>
+
+            <div class="login-divider">
+                <span>Or continue with</span>
+            </div>
+
+            <div class="social-login">
+                <div id="googleBtn" style="display: flex; justify-content: center;"></div>
+            </div>
+
+            <div class="login-footer">
+                <p>Don't have an account? <a href="register.html">Register Now</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

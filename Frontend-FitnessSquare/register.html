@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | Fitness Square</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Identity Services -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+
+<body class="login-page">
+
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <a href="index.html" class="logo">
+                    <img src="logo.png" alt="Fitness Square Logo" class="logo-img">
+                    FITNESS <span>SQUARE</span>
+                </a>
+                <h2>Register</h2>
+            </div>
+
+            <div class="form-message" id="formMessage"></div>
+
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="fullname">Full Name</label>
+                    <input type="text" id="fullname" placeholder="Enter your full name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="role">Register As</label>
+                    <select id="role" required>
+                        <option value="member">Member</option>
+                        <option value="trainer">Trainer</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+
+                <!-- Trainer Specific Fields -->
+                <div id="specializationContainer" class="form-group" style="display: none;">
+                    <label for="specialization">Specialization <span style="color:red">*</span></label>
+                    <select id="specialization">
+                        <option value="" disabled selected>Select Specialization</option>
+                        <option value="Weight Loss">Weight Loss</option>
+                        <option value="Muscle Gain">Muscle Gain</option>
+                        <option value="General Fitness">General Fitness</option>
+                        <option value="Strength Training">Strength Training</option>
+                        <option value="Cardio Training">Cardio Training</option>
+                        <option value="Yoga & Flexibility">Yoga & Flexibility</option>
+                        <option value="Diabetes Management">Diabetes Management</option>
+                        <option value="Heart Health">Heart Health</option>
+                        <option value="Women Fitness">Women Fitness</option>
+                        <option value="Senior Fitness">Senior Fitness</option>
+                        <option value="Post Injury Rehab">Post Injury Rehab</option>
+                    </select>
+                </div>
+
+                <!-- Member Goals Section -->
+                <div id="memberGoalsContainer" style="display: none;">
+                    <div class="form-group">
+                        <label>Fitness Goals (Select Multiple)</label>
+                        <div class="checkbox-group" id="fitnessGoals">
+                            <label><input type="checkbox" value="Weight Loss"> Weight Loss</label>
+                            <label><input type="checkbox" value="Muscle Gain"> Muscle Gain</label>
+                            <label><input type="checkbox" value="General Fitness"> General Fitness</label>
+                            <label><input type="checkbox" value="Strength Training"> Strength Training</label>
+                            <label><input type="checkbox" value="Cardio Training"> Cardio Training</label>
+                            <label><input type="checkbox" value="Yoga & Flexibility"> Yoga & Flexibility</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="primaryGoal">Primary Goal</label>
+                        <select id="primaryGoal" class="form-control">
+                            <option value="" disabled selected>Select Primary Goal</option>
+                            <!-- Options populate dynamically or static same as above -->
+                            <option value="Weight Loss">Weight Loss</option>
+                            <option value="Muscle Gain">Muscle Gain</option>
+                            <option value="General Fitness">General Fitness</option>
+                            <option value="Strength Training">Strength Training</option>
+                            <option value="Cardio Training">Cardio Training</option>
+                            <option value="Yoga & Flexibility">Yoga & Flexibility</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="Enter your email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-icon">
+                        <input type="password" id="password" placeholder="Create a password" required>
+                        <i class="fas fa-eye toggle-password" data-target="password"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm-password">Confirm Password</label>
+                    <div class="input-icon">
+                        <input type="password" id="confirm-password" placeholder="Confirm your password" required>
+                        <i class="fas fa-eye toggle-password" data-target="confirm-password"></i>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">Register</button>
+            </form>
+
+            <div class="login-divider">
+                <span>Or sign up with</span>
+            </div>
+
+            <div class="social-login">
+                <div id="googleBtn" style="display: flex; justify-content: center;"></div>
+            </div>
+
+            <div class="login-footer">
+                <p>Already have an account? <a href="login.html">Sign In</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

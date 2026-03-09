@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Post | Fitness Square</title>
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/blog.css">
+</head>
+
+<body class="blog-page">
+
+    <!-- Header (Reused from Dashboard) -->
+    <header id="header">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <img src="logo.png" alt="Fitness Square Logo" class="logo-img">
+                FITNESS <span>SQUARE</span>
+            </a>
+            <nav class="nav-links">
+                <a href="#" id="dashboardLink">Dashboard</a>
+                <a href="blog.html">Community</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="blog-container">
+        <div class="create-post-form">
+            <a href="blog.html"
+                style="color: var(--text-muted); text-decoration: none; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 20px; transition: color 0.3s; font-weight: 600;"
+                onmouseover="this.style.color='var(--blog-primary)'" onmouseout="this.style.color='var(--text-muted)'">
+                <i class="fas fa-arrow-left"></i> Back to Community
+            </a>
+            <h2 class="blog-title" style="margin-bottom: 30px; text-align: center;">Share Your <span>Story</span></h2>
+
+            <form id="createPostForm">
+                <div class="form-group">
+                    <label for="postTitle">Title</label>
+                    <input type="text" id="postTitle" class="form-control" placeholder="Enter an engaging title..."
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="postImage">Upload Image (Optional)</label>
+                    <input type="file" id="postImage" class="form-control" accept="image/*">
+                    <small style="color: #888;">Max size: 5MB. Formats: JPG, PNG, WEBP.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="postTags">Tags (comma separated)</label>
+                    <input type="text" id="postTags" class="form-control" placeholder="fitness, nutrition, motivation">
+                </div>
+
+                <div class="form-group">
+                    <label for="postContent">Content</label>
+                    <textarea id="postContent" class="form-control" placeholder="Write your post here..."
+                        required></textarea>
+                </div>
+
+                <div style="text-align: center;">
+                    <button type="submit" class="btn-create-post" style="width: 100%; max-width: 300px;">
+                        <i class="fas fa-paper-plane"></i> Publish Post
+                    </button>
+                    <p id="submissionStatus" style="margin-top: 15px; color: var(--text-muted); display: none;"></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/blog.js?v=2"></script>
+    <script>
+        // Check auth
+        const token = localStorage.getItem('token');
+        if (!token) window.location.href = 'login.html';
+
+        // Update dashboard link based on role
+        const userStr = localStorage.getItem('user');
+        if (userStr) {
+            try {
+                const userObj = JSON.parse(userStr);
+                const role = userObj.role;
+
+                const dbLink = document.getElementById('dashboardLink');
+                if (dbLink) {
+                    if (role === 'admin') dbLink.href = 'admin-dashboard.html';
+                    else if (role === 'trainer') dbLink.href = 'trainer-dashboard.html';
+                    else dbLink.href = 'dashboard.html';
+                }
+            } catch (e) {
+                console.error("Error parsing user from localStorage", e);
+            }
+        }
+
+        // Bind form submission
+        document.getElementById('createPostForm').addEventListener('submit', handleCreatePost);
+    </script>
+</body>
+
+</html>

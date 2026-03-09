@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trainer Profile | Fitness Square</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="profile-page profile-trainer-page">
+
+    <!-- Header -->
+    <header id="header">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <img src="logo.png" alt="Fitness Square Logo" class="logo-img">
+                FITNESS <span>SQUARE</span>
+            </a>
+            <nav class="nav-links">
+                <!-- Trainer Nav Links -->
+                <a href="trainer-dashboard.html" class="btn btn-primary">Dashboard</a>
+                <a href="#" id="logoutBtn" class="login-link">
+                    <i class="fas fa-sign-out-alt"></i>
+                    LOGOUT
+                </a>
+            </nav>
+            <div class="hamburger">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Profile Content -->
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <h1>Trainer Profile</h1>
+            <p>Manage your professional details.</p>
+        </div>
+
+        <div class="profile-card-container" style="max-width: 800px; margin: 0 auto;">
+            <div class="login-card profile-edit-card">
+                <form id="profileForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="fullname">Full Name</label>
+                            <input type="text" id="fullname" placeholder="Confirm your name" readonly>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" disabled>
+                            <small style="color: #888;">Email cannot be changed</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="specialization">Specialization</label>
+                            <input type="text" id="specialization" placeholder="e.g. Yoga, Strength Training, HIIT">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="experience">Experience</label>
+                            <input type="text" id="experience" placeholder="e.g. 5+ years at Fitness First">
+                        </div>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="certificates">Certificates</label>
+                        <input type="text" id="certificates"
+                            placeholder="e.g. ACE Certified, NASM, Nutrition Specialist">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="bio">Short Bio</label>
+                        <textarea id="bio" placeholder="Tell users about your coaching style..." rows="4"></textarea>
+                    </div>
+
+                    <div id="profileMessage" class="form-message"></div>
+
+                    <button type="submit" class="btn btn-primary btn-block">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js?v=2"></script>
+</body>
+
+</html>
