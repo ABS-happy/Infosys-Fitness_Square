@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness Square | Premium Gym & Fitness Institute</title>
+    <meta name="description"
+        content="Welcome to Fitness Square, the elite fitness destination inspired by the legacy of Gold's Gym. Start your transformation today.">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header id="header">
+        <div class="container nav-container">
+            <a href="#" class="logo">
+                <img src="logo.png" alt="Fitness Square Logo" class="logo-img">
+                FITNESS <span>SQUARE</span>
+            </a>
+
+            <nav class="nav-links">
+                <div class="nav-item has-dropdown">
+                    <a href="#" class="nav-link">Tracker</a>
+                    <i class="fas fa-chevron-down"></i>
+                    <div class="dropdown-menu">
+                        <a href="workout-tracker.html" class="dropdown-item"><i class="fas fa-dumbbell"></i> Workout</a>
+                        <a href="sleep-tracker.html" class="dropdown-item"><i class="fas fa-moon"></i> Sleep</a>
+                        <a href="water-tracker.html" class="dropdown-item"><i class="fas fa-tint"></i> Water</a>
+                        <a href="meal-tracker.html" class="dropdown-item"><i class="fas fa-utensils"></i> Meal</a>
+                    </div>
+                </div>
+                <div class="nav-item has-dropdown">
+                    <a href="#" class="nav-link">Calculator</a>
+                    <i class="fas fa-chevron-down"></i>
+                    <div class="dropdown-menu dropdown-menu-wide">
+                        <a href="bmi-calculator.html" class="dropdown-item"><i class="fas fa-weight"></i> BMI
+                            Calculator</a>
+                        <a href="calorie-calculator.html" class="dropdown-item"><i class="fas fa-fire"></i> Calorie
+                            Calculator</a>
+                        <a href="bodyfat-calculator.html" class="dropdown-item"><i class="fas fa-percentage"></i> Body
+                            Fat Calculator</a>
+                        <a href="deficit-calculator.html" class="dropdown-item"><i class="fas fa-chart-line"></i>
+                            Calorie Deficit</a>
+                        <a href="hydration-calculator.html" class="dropdown-item"><i class="fas fa-heartbeat"></i>
+                            Hydration Calculator</a>
+                    </div>
+                </div>
+                <div class="nav-item" id="notificationNav" style="position: relative; cursor: pointer; display: none;">
+                    <i class="fas fa-bell"></i>
+                    <span id="notificationBadge" class="badge">0</span>
+                    <div id="notificationDropdown" class="dropdown-menu notification-dropdown">
+                        <div class="dropdown-header">Notifications</div>
+                        <div id="notificationList" class="notification-list">
+                            <div class="dropdown-item">No new notifications</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-separator"></div>
+                <a href="login.html" id="navLogin" class="login-link">
+                    <i class="far fa-user"></i>
+                    LOGIN
+                </a>
+                <a href="login.html" id="navAction" class="btn btn-primary">Get a Demo</a>
+            </nav>
+
+            <div class="hamburger">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content">
+                <h1>THE LEGACY OF <span>STRENGTH</span></h1>
+                <p>Experience the ultimate fitness journey with world-class equipment, expert trainers, and a community
+                    dedicated to your success.</p>
+                <div class="hero-btns">
+                    <a href="#" class="btn btn-primary">Book Free Trial</a>
+                    <a href="#" class="btn btn-outline" style="margin-left: 15px;">Learn More</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <h2>50+</h2>
+                    <p>Clubs Across India</p>
+                </div>
+                <div class="stat-item">
+                    <h2>100k+</h2>
+                    <p>Happy Members</p>
+                </div>
+                <div class="stat-item">
+                    <h2>1000+</h2>
+                    <p>Certified Trainers</p>
+                </div>
+                <div class="stat-item">
+                    <h2>20+</h2>
+                    <p>Years of Excellence</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Business Verticals -->
+    <section class="verticals" id="gyms">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Verticals</h2>
+            </div>
+            <div class="verticals-grid">
+                <div class="vertical-card">
+                    <i class="fas fa-dumbbell"></i>
+                    <h3>Fitness Clubs</h3>
+                    <p>State-of-the-art facilities with the latest equipment and a motivating environment to reach your
+                        peak potential.</p>
+                </div>
+                <div class="vertical-card">
+                    <i class="fas fa-user-tie"></i>
+                    <h3>Personal Training</h3>
+                    <p>One-on-one sessions with elite trainers tailored to your specific goals, from weight loss to
+                        muscle gain.</p>
+                </div>
+                <div class="vertical-card">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h3>Fitness Institute</h3>
+                    <p>Join our renowned academy and become a certified fitness professional with our comprehensive
+                        courses.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Banner -->
+    <section class="cta-banner">
+        <div class="container">
+            <h2>START YOUR TRANSFORMATION TODAY</h2>
+            <p>Join the world's most iconic gym brand and take the first step towards a healthier you.</p>
+            <a href="#" class="btn btn-primary">Get Started Now</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4 class="logo" style="margin-bottom: 20px;">FITNESS SQUARE</h4>
+                    <p>Inspired by the heritage of Gold's Gym, Fitness Square brings elite training and a community of
+                        strength to the modern world.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#">Find a Gym</a></li>
+                        <li><a href="#">Corporate Wellness</a></li>
+                        <li><a href="#">Franchise Inquiry</a></li>
+                        <li><a href="#">Membership Plans</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Customer Care</h4>
+                    <ul>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Use</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Stay Connected</h4>
+                    <div class="social-links" style="display: flex; gap: 20px; font-size: 1.5rem;">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-x-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Fitness Square. All Rights Reserved. Not affiliated with Gold's Gym International.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js?v=2"></script>
+</body>
+
+</html>
